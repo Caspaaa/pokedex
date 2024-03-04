@@ -1,0 +1,13 @@
+<div>pokemons</div>
+<ul>
+  <li *ngFor="let pokemon of pokemons">
+    {{ pokemon.name }}
+  </li>
+</ul>
+<button
+  (click)="onPreviousPage()"
+  [disabled]="previousPage === null || isLoading"
+>
+  Previous
+</button>
+<button (click)="onNextPage()" [disabled]="!nextPage || isLoading">Next</button>
