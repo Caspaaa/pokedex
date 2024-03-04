@@ -22,43 +22,47 @@ export class PokemonsListComponent implements OnInit {
 
   ngOnInit() {
     // this.loadPokemons();
-    this.loadAllPokemons();
-  }
-
-  loadPokemons(url: string = 'https://pokeapi.co/api/v2/pokemon?limit=20') {
-    this.isLoading = true;
-    this.pokeapiService.fetchPokemons(url).subscribe({
-      next: (data) => {
-        if (data) {
-          this.pokemons = data.results;
-          this.previousPage = data.previous;
-          this.nextPage = data.next;
-        }
-      },
-      error: (error) => {
-        console.error('something wrong occurred: ' + error);
-        this.isLoading = false;
-      },
-      complete() {
-        console.log('done');
-      },
+    // this.loadAllPokemons();
+    this.pokeapiService.fetchPokemons().subscribe(({ data, loading }) => {
+      this.pokemons = data.pokemon_v2_pokemon;
+      this.isLoading = loading;
     });
   }
 
-  loadAllPokemons() {
-    this.isLoading = true;
-    this.pokeapiService.fetchAllPokemonse().subscribe((pokemons) => {
-      this.pokemons = pokemons;
-      this.filteredPokemons = pokemons;
-      this.isLoading = false;
-    });
-  }
+  // loadPokemons(url: string = 'https://pokeapi.co/api/v2/pokemon?limit=20') {
+  //   this.isLoading = true;
+  //   this.pokeapiService.fetchPokemons(url).subscribe({
+  //     next: (data) => {
+  //       if (data) {
+  //         this.pokemons = data.results;
+  //         this.previousPage = data.previous;
+  //         this.nextPage = data.next;
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error('something wrong occurred: ' + error);
+  //       this.isLoading = false;
+  //     },
+  //     complete() {
+  //       console.log('done');
+  //     },
+  //   });
+  // }
 
-  onNextPage() {
-    if (this.nextPage) this.loadPokemons(this.nextPage);
-  }
+  // loadAllPokemons() {
+  //   this.isLoading = true;
+  //   this.pokeapiService.fetchAllPokemonse().subscribe((pokemons) => {
+  //     this.pokemons = pokemons;
+  //     this.filteredPokemons = pokemons;
+  //     this.isLoading = false;
+  //   });
+  // }
 
-  onPreviousPage() {
-    if (this.previousPage) this.loadPokemons(this.previousPage);
-  }
+  // onNextPage() {
+  //   if (this.nextPage) this.loadPokemons(this.nextPage);
+  // }
+
+  // onPreviousPage() {
+  //   if (this.previousPage) this.loadPokemons(this.previousPage);
+  // }
 }
