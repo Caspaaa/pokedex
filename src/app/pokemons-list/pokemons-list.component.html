@@ -1,13 +1,11 @@
 <div>pokemons</div>
-<ul>
-  <li *ngFor="let pokemon of pokemons">
+<div *ngFor="let pokemon of pokemons">
+  <div>
     {{ pokemon.name }}
-  </li>
-</ul>
-<!-- <button
-  (click)="onPreviousPage()"
-  [disabled]="previousPage === null || isLoading"
->
-  Previous
-</button>
-<button (click)="onNextPage()" [disabled]="!nextPage || isLoading">Next</button> -->
+  </div>
+  <div>
+    <img [src]="pokemon.pokemon_v2_pokemonsprites[0].sprites.front_default" />
+  </div>
+</div>
+<button (click)="onPreviousPokemons()">Previous</button>
+<button (click)="onNextPokemons()">Next</button>
