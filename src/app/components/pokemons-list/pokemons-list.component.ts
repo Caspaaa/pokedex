@@ -1,32 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { PokeapiService } from '../pokeapi.service';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { NgOptimizedImage } from '@angular/common';
 
-interface Pokemon {
-  base_experience: number;
-  height: number;
-  id: number;
-  name: string;
-  order: number;
-  is_default: boolean;
-  pokemon_v2_pokemonsprites: Array<{
-    id: number;
-    sprites: {
-      front_default: string;
-    };
-  }>;
-}
+import { PokeapiService } from '../../services/pokeapi.service';
+
+import { Pokemon } from '@models/pokemon.model';
 
 @Component({
   selector: 'app-pokemons-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './pokemons-list.component.html',
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
   pokemons: Array<Pokemon> = [];
+  names: Array<{ name: string; url: string }> = [];
   filteredPokemons: Array<{ name: string; url: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
@@ -35,8 +24,19 @@ export class PokemonsListComponent implements OnInit {
   constructor(private pokeapiService: PokeapiService) {}
 
   ngOnInit() {
+    this.loadPokemons();
+  }
+
+  loadPokemons() {
     this.pokeapiService.fetchPokemons().subscribe(({ data }) => {
       this.pokemons = data.pokemon_v2_pokemon;
+      this.loadAllPokemonNames();
+    });
+  }
+
+  loadAllPokemonNames() {
+    this.pokeapiService.fetchAllPokemonNames().subscribe(({ data }) => {
+      this.names = data.pokemon_v2_pokemon;
     });
   }
 
