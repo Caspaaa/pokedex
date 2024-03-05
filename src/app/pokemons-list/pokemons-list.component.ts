@@ -3,6 +3,21 @@ import { PokeapiService } from '../pokeapi.service';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 
+interface Pokemon {
+  base_experience: number;
+  height: number;
+  id: number;
+  name: string;
+  order: number;
+  is_default: boolean;
+  pokemon_v2_pokemonsprites: Array<{
+    id: number;
+    sprites: {
+      front_default: string;
+    };
+  }>;
+}
+
 @Component({
   selector: 'app-pokemons-list',
   standalone: true,
@@ -11,58 +26,29 @@ import { Observable } from 'rxjs';
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
-  pokemons: Array<{ name: string; url: string }> = [];
+  pokemons: Array<Pokemon> = [];
   filteredPokemons: Array<{ name: string; url: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
   isLoading: boolean = false;
 
-  // why
   constructor(private pokeapiService: PokeapiService) {}
 
   ngOnInit() {
-    // this.loadPokemons();
-    // this.loadAllPokemons();
-    this.pokeapiService.fetchPokemons().subscribe(({ data, loading }) => {
+    this.pokeapiService.fetchPokemons().subscribe(({ data }) => {
       this.pokemons = data.pokemon_v2_pokemon;
-      this.isLoading = loading;
     });
   }
 
-  // loadPokemons(url: string = 'https://pokeapi.co/api/v2/pokemon?limit=20') {
-  //   this.isLoading = true;
-  //   this.pokeapiService.fetchPokemons(url).subscribe({
-  //     next: (data) => {
-  //       if (data) {
-  //         this.pokemons = data.results;
-  //         this.previousPage = data.previous;
-  //         this.nextPage = data.next;
-  //       }
-  //     },
-  //     error: (error) => {
-  //       console.error('something wrong occurred: ' + error);
-  //       this.isLoading = false;
-  //     },
-  //     complete() {
-  //       console.log('done');
-  //     },
-  //   });
-  // }
+  onNextPokemons() {
+    this.pokeapiService.nextPokemons().subscribe(({ data }) => {
+      this.pokemons = data.pokemon_v2_pokemon;
+    });
+  }
 
-  // loadAllPokemons() {
-  //   this.isLoading = true;
-  //   this.pokeapiService.fetchAllPokemonse().subscribe((pokemons) => {
-  //     this.pokemons = pokemons;
-  //     this.filteredPokemons = pokemons;
-  //     this.isLoading = false;
-  //   });
-  // }
-
-  // onNextPage() {
-  //   if (this.nextPage) this.loadPokemons(this.nextPage);
-  // }
-
-  // onPreviousPage() {
-  //   if (this.previousPage) this.loadPokemons(this.previousPage);
-  // }
+  onPreviousPokemons() {
+    this.pokeapiService.previousPokemons().subscribe(({ data }) => {
+      this.pokemons = data.pokemon_v2_pokemon;
+    });
+  }
 }
