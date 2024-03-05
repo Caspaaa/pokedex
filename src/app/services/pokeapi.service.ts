@@ -7,6 +7,7 @@ import { LocalStorageService } from './local-storage.service';
 import { PokemonNameListResponse } from '@models/pokemon.model';
 
 import { ApolloQueryResult } from '@apollo/client';
+import { ActivatedRoute } from '@angular/router';
 
 const GET_POKEMONS = gql`
   query getPokemons($offset: Int!, $limit: Int!) {
@@ -34,6 +35,38 @@ const GET_ALL_POKEMONS_NAMES = gql`
   }
 `;
 
+const GET_POKEMON_DETAILS = gql`
+  query getPokemonDetails($id: Int!) {
+    pokemon_v2_pokemon(where: { id: { _eq: $id } }) {
+      base_experience
+      height
+      id
+      name
+      order
+      weight
+      pokemon_v2_pokemontypes {
+        slot
+        pokemon_v2_type {
+          name
+        }
+      }
+      pokemon_v2_pokemonmoves {
+        move_id
+        level
+        pokemon_v2_move {
+          name
+          accuracy
+          pp
+          power
+        }
+      }
+      pokemon_v2_pokemonspecy {
+        name
+      }
+    }
+  }
+`;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -43,10 +76,10 @@ export class PokeapiService {
 
   constructor(
     private apollo: Apollo,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private route: ActivatedRoute
   ) {}
 
-  //
   fetchAllPokemonNames(): Observable<PokemonNameListResponse> {
     const cachedList: string | null = this.localStorageService.getItem('list');
     const currentTime: number = new Date().getTime();
@@ -54,6 +87,7 @@ export class PokeapiService {
     if (cachedList) {
       const { expiringTime, list } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
+        console.log('cached list exists', list);
         return of(list);
       }
     }
@@ -63,16 +97,16 @@ export class PokeapiService {
         query: GET_ALL_POKEMONS_NAMES,
         variables: {
           offset: 0,
-          limit: 1300,
+          limit: 1500,
         },
       })
       .valueChanges.pipe(
-        tap((data: PokemonNameListResponse) => {
+        tap((list: PokemonNameListResponse) => {
           const ttl = 7 * 24 * 60 * 60 * 1000; // 1 week
           const expiringTime = currentTime + ttl;
           this.localStorageService.setItem(
             'list',
-            JSON.stringify({ expiringTime, data })
+            JSON.stringify({ expiringTime, list })
           );
         })
       );
@@ -96,5 +130,16 @@ export class PokeapiService {
   previousPokemons() {
     this.offset = Math.max(0, (this.offset -= this.limit));
     return this.fetchPokemons();
+  }
+
+  fetchPokemonDetails() {
+    // const pokemonId = this.route.snapshot.paramMap.get('id');
+    console.log('this.route', this.route);
+    return this.apollo.watchQuery<any>({
+      query: GET_POKEMON_DETAILS,
+      variables: {
+        id: 1, // todo: replace this with uri param
+      },
+    }).valueChanges;
   }
 }

@@ -1,0 +1,22 @@
+<div class="search-container">
+  <input
+    type="text"
+    placeholder="Search Pokémon"
+    [formControl]="searchControl"
+  />
+  <!-- <button [routerLink]="['/pokemon-detail', result.id]">Go to Pokémon</button> -->
+
+  <div *ngIf="searchResults.length > 0">
+    <div>
+      <div *ngFor="let result of searchResults">
+        <div [routerLink]="['/pokemon', result.id]">
+          <div>#{{ result.id }}</div>
+          <div>{{ result.name }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="searchControl.value && searchResults.length === 0">
+    No results found.
+  </div>
+</div>
