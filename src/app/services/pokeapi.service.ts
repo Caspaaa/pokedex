@@ -1,29 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
-import { LocalStorageService } from './local-storage.service';
 import { Apollo, gql } from 'apollo-angular';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
-interface Pokemon {
-  base_experience: number;
-  height: number;
-  id: number;
-  name: string;
-  order: number;
-  is_default: boolean;
-  pokemon_v2_pokemonsprites: Array<{
-    id: number;
-    sprites: {
-      front_default: string;
-    };
-  }>;
-}
+import { LocalStorageService } from './local-storage.service';
 
-interface PokemonListResponse {
-  data: {
-    pokemon_v2_pokemon: Pokemon[];
-  };
-}
+import { Pokemon, PokemonListResponse } from '@models/pokemon.model';
+import { ApolloQueryResult } from '@apollo/client';
 
 const GET_POKEMONS = gql`
   query getPokemons($offset: Int!, $limit: Int!) {
@@ -42,16 +24,35 @@ const GET_POKEMONS = gql`
   }
 `;
 
+const GET_ALL_POKEMONS_NAMES = gql`
+  query getPokemons($offset: Int!, $limit: Int!) {
+    pokemon_v2_pokemon(offset: $offset, limit: $limit) {
+      id
+      name
+    }
+  }
+`;
+
 @Injectable({
   providedIn: 'root',
 })
 export class PokeapiService {
-  private limit = 20;
+  private limit = 9;
   private offset = 0;
 
   constructor(private apollo: Apollo) {}
 
-  fetchPokemons(): Observable<PokemonListResponse> {
+  fetchAllPokemonNames(): Observable<any> {
+    return this.apollo.watchQuery<any>({
+      query: GET_ALL_POKEMONS_NAMES,
+      variables: {
+        offset: 0,
+        limit: 1300,
+      },
+    }).valueChanges;
+  }
+
+  fetchPokemons(): Observable<ApolloQueryResult<any>> {
     return this.apollo.watchQuery<any>({
       query: GET_POKEMONS,
       variables: {

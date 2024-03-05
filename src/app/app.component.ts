@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PokemonsListComponent } from './pokemons-list/pokemons-list.component';
+import { PokemonsListComponent } from './components/pokemons-list/pokemons-list.component';
 
 @Component({
   selector: 'app-root',

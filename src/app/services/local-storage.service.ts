@@ -8,7 +8,6 @@ export class LocalStorageService {
 
   // how to type this?
   setItem(key: string, value: any) {
-    // this is to avoid getting localStorage is not defined error
     if (typeof window !== 'undefined') {
       try {
         const stringifiedValue = JSON.stringify(value);
@@ -21,7 +20,6 @@ export class LocalStorageService {
 
   // how to type this?
   getItem(key: string) {
-    // this is to avoid getting localStorage is not defined error
     if (typeof window !== 'undefined') {
       try {
         const item = localStorage.getItem(key);
