@@ -29,3 +29,15 @@ export interface PokemonName {
   id: number;
   name: string;
 }
+
+export interface PokemonDetails {
+  base_experience: number;
+  height: number;
+  id: number;
+  name: string;
+  order: number;
+  weight: number;
+  pokemon_v2_pokemontypes: any;
+  pokemon_v2_pokemonmoves: any;
+  pokemon_v2_pokemonspecy: any;
+}

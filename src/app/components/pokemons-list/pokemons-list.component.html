@@ -1,22 +1,25 @@
-<div>pokemons</div>
-<div style="min-height: 100px" *ngFor="let pokemon of pokemons">
-  <div>
-    {{ pokemon.name }}
-  </div>
-  <div>
-    <!-- <img
+<div style="border: 1px solid red">
+  <app-pokemon-input [names]="names"></app-pokemon-input>
+
+  <div style="min-height: 100px" *ngFor="let pokemon of pokemons">
+    <div>
+      {{ pokemon.name }}
+    </div>
+    <div>
+      <!-- <img
       width="475"
       height="475"
       ngSrc="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{
         pokemon.id
       }}.png"
     /> -->
-    <img
-      width="96"
-      height="96"
-      src="{{ pokemon.pokemon_v2_pokemonsprites[0].sprites.front_default }}"
-    />
+      <img
+        width="96"
+        height="96"
+        src="{{ pokemon.pokemon_v2_pokemonsprites[0].sprites.front_default }}"
+      />
+    </div>
   </div>
+  <button (click)="onPreviousPokemons()">Previous</button>
+  <button (click)="onNextPokemons()">Next</button>
 </div>
-<button (click)="onPreviousPokemons()">Previous</button>
-<button (click)="onNextPokemons()">Next</button>
