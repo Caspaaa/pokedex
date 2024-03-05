@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgOptimizedImage } from '@angular/common';
 
 import { PokeapiService } from '../../services/pokeapi.service';
 
@@ -9,14 +8,13 @@ import { Pokemon } from '@models/pokemon.model';
 @Component({
   selector: 'app-pokemons-list',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule],
   templateUrl: './pokemons-list.component.html',
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
   pokemons: Array<Pokemon> = [];
-  names: Array<{ name: string; url: string }> = [];
-  filteredPokemons: Array<{ name: string; url: string }> = [];
+  names: Array<{ id: number; name: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
   isLoading: boolean = false;

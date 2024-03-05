@@ -1,5 +1,4 @@
 export interface Pokemon {
-  highQualityImage: string;
   base_experience: number;
   height: number;
   id: number;
@@ -18,4 +17,15 @@ export interface PokemonListResponse {
   data: {
     pokemon_v2_pokemon: Pokemon[];
   };
+}
+
+export interface PokemonNameListResponse {
+  data: {
+    pokemon_v2_pokemon: PokemonName[];
+  };
+}
+
+export interface PokemonName {
+  id: number;
+  name: string;
 }
