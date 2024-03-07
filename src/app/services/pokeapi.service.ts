@@ -7,7 +7,6 @@ import { LocalStorageService } from './local-storage.service';
 import { PokemonNameListResponse } from '@models/pokemon.model';
 
 import { ApolloQueryResult } from '@apollo/client';
-import { ActivatedRoute } from '@angular/router';
 
 const GET_POKEMONS = gql`
   query getPokemons($offset: Int!, $limit: Int!) {
@@ -76,8 +75,7 @@ export class PokeapiService {
 
   constructor(
     private apollo: Apollo,
-    private localStorageService: LocalStorageService,
-    private route: ActivatedRoute
+    private localStorageService: LocalStorageService
   ) {}
 
   fetchAllPokemonNames(): Observable<PokemonNameListResponse> {
@@ -132,13 +130,11 @@ export class PokeapiService {
     return this.fetchPokemons();
   }
 
-  fetchPokemonDetails() {
-    // const pokemonId = this.route.snapshot.paramMap.get('id');
-    console.log('this.route', this.route);
+  fetchPokemonDetails(pokemonId: number) {
     return this.apollo.watchQuery<any>({
       query: GET_POKEMON_DETAILS,
       variables: {
-        id: 1, // todo: replace this with uri param
+        id: pokemonId,
       },
     }).valueChanges;
   }
