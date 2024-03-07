@@ -27,7 +27,7 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'cache-first',
+        fetchPolicy: 'network-only', // cache-first
       },
     },
   };
