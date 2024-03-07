@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 import { LocalStorageService } from './local-storage.service';
@@ -7,64 +7,11 @@ import { LocalStorageService } from './local-storage.service';
 import { PokemonNameListResponse } from '@models/pokemon.model';
 
 import { ApolloQueryResult } from '@apollo/client';
-
-const GET_POKEMONS = gql`
-  query getPokemons($offset: Int!, $limit: Int!) {
-    pokemon_v2_pokemon(offset: $offset, limit: $limit) {
-      base_experience
-      height
-      id
-      name
-      order
-      is_default
-      pokemon_v2_pokemonsprites {
-        id
-        sprites
-      }
-    }
-  }
-`;
-
-const GET_ALL_POKEMONS_NAMES = gql`
-  query getPokemons($offset: Int!, $limit: Int!) {
-    pokemon_v2_pokemon(offset: $offset, limit: $limit) {
-      id
-      name
-    }
-  }
-`;
-
-const GET_POKEMON_DETAILS = gql`
-  query getPokemonDetails($id: Int!) {
-    pokemon_v2_pokemon(where: { id: { _eq: $id } }) {
-      base_experience
-      height
-      id
-      name
-      order
-      weight
-      pokemon_v2_pokemontypes {
-        slot
-        pokemon_v2_type {
-          name
-        }
-      }
-      pokemon_v2_pokemonmoves {
-        move_id
-        level
-        pokemon_v2_move {
-          name
-          accuracy
-          pp
-          power
-        }
-      }
-      pokemon_v2_pokemonspecy {
-        name
-      }
-    }
-  }
-`;
+import {
+  GET_POKEMONS,
+  GET_POKEMON_DETAILS,
+  GET_ALL_POKEMON_NAMES,
+} from '../queries/pokeapi.queries';
 
 @Injectable({
   providedIn: 'root',
@@ -92,7 +39,7 @@ export class PokeapiService {
 
     return this.apollo
       .watchQuery<any>({
-        query: GET_ALL_POKEMONS_NAMES,
+        query: GET_ALL_POKEMON_NAMES,
         variables: {
           offset: 0,
           limit: 1500,
