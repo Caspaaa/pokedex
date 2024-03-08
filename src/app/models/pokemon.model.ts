@@ -1,4 +1,4 @@
-export interface Pokemon {
+export interface PokemonMedium {
   base_experience: number;
   height: number;
   id: number;
@@ -15,22 +15,23 @@ export interface Pokemon {
 
 export interface PokemonListResponse {
   data: {
-    pokemon_v2_pokemon: Pokemon[];
+    pokemon_v2_pokemon: PokemonMedium[];
   };
 }
 
-export interface PokemonNameListResponse {
-  data: {
-    pokemon_v2_pokemon: PokemonName[];
-  };
-}
-
-export interface PokemonName {
+export interface PokemonLight {
   id: number;
   name: string;
+  captured?: boolean;
 }
 
-export interface PokemonDetails {
+export interface PokemonLightListResponse {
+  data: {
+    pokemon_v2_pokemon: PokemonLight[];
+  };
+}
+
+export interface PokemonFull {
   base_experience: number;
   height: number;
   id: number;
@@ -40,4 +41,11 @@ export interface PokemonDetails {
   pokemon_v2_pokemontypes: any;
   pokemon_v2_pokemonmoves: any;
   pokemon_v2_pokemonspecy: any;
+  captured: boolean;
+}
+
+export interface PokemonFullListResponse {
+  data: {
+    pokemon_v2_pokemon: PokemonFull[];
+  };
 }
