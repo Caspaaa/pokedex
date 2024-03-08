@@ -4,7 +4,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { PokeapiService } from '../../services/pokeapi.service';
 
-import { Pokemon } from '@models/pokemon.model';
+import {
+  PokemonMedium,
+  PokemonListResponse,
+  PokemonLight,
+} from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 
 @Component({
@@ -21,7 +25,7 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
-  pokemons: Array<Pokemon> = [];
+  pokemons: Array<PokemonMedium> = [];
   names: Array<{ id: number; name: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
@@ -34,32 +38,26 @@ export class PokemonsListComponent implements OnInit {
   }
 
   loadPokemons() {
-    this.pokeapiService.fetchPokemons().subscribe(({ data }) => {
-      this.pokemons = data.pokemon_v2_pokemon;
-      this.loadAllPokemonNames();
-    });
-  }
-
-  loadAllPokemonNames() {
-    console.log('loadAllPokemonNames');
-    this.pokeapiService.fetchAllPokemonNames().subscribe((response) => {
-      if (response) {
-        console.log('response');
-        this.names = response.data.pokemon_v2_pokemon;
-        console.log('this.names.length', this.names.length);
-      }
-    });
+    this.pokeapiService
+      .fetchPokemons()
+      .subscribe((pokemonList: PokemonMedium[]) => {
+        this.pokemons = pokemonList;
+      });
   }
 
   onNextPokemons() {
-    this.pokeapiService.nextPokemons().subscribe(({ data }) => {
-      this.pokemons = data.pokemon_v2_pokemon;
-    });
+    this.pokeapiService
+      .nextPokemons()
+      .subscribe((nextPokemons: PokemonMedium[]) => {
+        this.pokemons = nextPokemons;
+      });
   }
 
   onPreviousPokemons() {
-    this.pokeapiService.previousPokemons().subscribe(({ data }) => {
-      this.pokemons = data.pokemon_v2_pokemon;
-    });
+    this.pokeapiService
+      .previousPokemons()
+      .subscribe((previousPokemons: PokemonMedium[]) => {
+        this.pokemons = previousPokemons;
+      });
   }
 }
