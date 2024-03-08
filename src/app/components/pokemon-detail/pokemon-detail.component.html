@@ -1,8 +1,30 @@
-<div *ngIf="pokemonDetails">
-  <img src="https://img.pokemondb.net/artwork/{{ pokemonDetails.name }}.jpg" />
-  id: {{ pokemonDetails.id }} name: {{ pokemonDetails.name }} base_experience:
-  {{ pokemonDetails.base_experience }} order: {{ pokemonDetails.order }} weight:
-  {{ pokemonDetails.weight }} slot:
-  {{ pokemonDetails.pokemon_v2_pokemontypes[0]?.slot }} type:
-  {{ pokemonDetails.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name }}
+<app-pokemon-input></app-pokemon-input>
+<div *ngIf="PokemonFull">
+  <img
+    height="300"
+    height="300"
+    src="https://img.pokemondb.net/artwork/{{ PokemonFull.name }}.jpg"
+  />
+  <!-- <img
+    height="300"
+    height="300"
+    src="https://svgsilh.com/png-1024/1574006.png"
+  /> -->
+  <div>id: {{ PokemonFull.id }}</div>
+  <div>name: {{ PokemonFull.name }}</div>
+  <div>base_experience: {{ PokemonFull.base_experience }}</div>
+  <div>order: {{ PokemonFull.order }}</div>
+  <div>weight: {{ PokemonFull.weight }}</div>
+  <div>slot: {{ PokemonFull.pokemon_v2_pokemontypes[0]?.slot }}</div>
+  <div>
+    type: {{ PokemonFull.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name }}
+  </div>
+  <div>captured: {{ PokemonFull.captured }}</div>
+  <button
+    [routerLink]="['/pokemon', PokemonFull.id - 1]"
+    [disabled]="PokemonFull.id === 1"
+  >
+    previous
+  </button>
+  <button [routerLink]="['/pokemon', PokemonFull.id + 1]">next</button>
 </div>
