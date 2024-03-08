@@ -1,4 +1,4 @@
-export interface PokemonMedium {
+export interface PokemonBasic {
   base_experience: number;
   height: number;
   id: number;
@@ -15,7 +15,7 @@ export interface PokemonMedium {
 
 export interface PokemonListResponse {
   data: {
-    pokemon_v2_pokemon: PokemonMedium[];
+    pokemon_v2_pokemon: PokemonBasic[];
   };
 }
 
