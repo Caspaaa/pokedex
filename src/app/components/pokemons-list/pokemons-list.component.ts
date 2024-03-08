@@ -26,7 +26,6 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
 })
 export class PokemonsListComponent implements OnInit {
   pokemons: Array<PokemonBasic> = [];
-  names: Array<{ id: number; name: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
   isLoading: boolean = false;
