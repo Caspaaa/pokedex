@@ -1,12 +1,8 @@
 import { Component, Input } from '@angular/core';
-import {
-  ActivatedRoute,
-  RouterOutlet,
-  RouterLink,
-  Router,
-} from '@angular/router';
+import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
 
 import { PokeapiService } from '../../services/pokeapi.service';
+import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
 import { PokemonFull } from '@models/pokemon.model';
 import { NgIf } from '@angular/common';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
@@ -20,12 +16,12 @@ import { map, of, switchMap, tap } from 'rxjs';
   styleUrl: './pokemon-detail.component.css',
 })
 export class PokemonDetailComponent {
-  PokemonFull: PokemonFull | null = null;
+  pokemonFull: PokemonFull | null = null;
 
   constructor(
     private pokeapiService: PokeapiService,
     private route: ActivatedRoute,
-    private router: Router
+    private capturePokemonsService: CapturedPokemonsService
   ) {}
 
   ngOnInit() {
@@ -39,10 +35,17 @@ export class PokemonDetailComponent {
   loadPokemonFull(id: number) {
     this.pokeapiService
       .fetchPokemonFull(id)
-      .subscribe((PokemonFull: PokemonFull) => {
-        if (PokemonFull) {
-          this.PokemonFull = PokemonFull;
+      .subscribe((pokemonFull: PokemonFull) => {
+        if (pokemonFull) {
+          this.pokemonFull = pokemonFull;
         }
       });
+  }
+
+  togglePokemonCapture() {
+    if (this.pokemonFull) {
+      this.pokemonFull.captured = !this.pokemonFull?.captured;
+      this.capturePokemonsService.toggleCapturedStatus(this.pokemonFull.id);
+    }
   }
 }
