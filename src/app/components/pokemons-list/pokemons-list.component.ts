@@ -5,7 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PokeapiService } from '../../services/pokeapi.service';
 
 import {
-  PokemonMedium,
+  PokemonBasic,
   PokemonListResponse,
   PokemonLight,
 } from '@models/pokemon.model';
@@ -25,7 +25,7 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
-  pokemons: Array<PokemonMedium> = [];
+  pokemons: Array<PokemonBasic> = [];
   names: Array<{ id: number; name: string }> = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
@@ -40,7 +40,7 @@ export class PokemonsListComponent implements OnInit {
   loadPokemons() {
     this.pokeapiService
       .fetchPokemons()
-      .subscribe((pokemonList: PokemonMedium[]) => {
+      .subscribe((pokemonList: PokemonBasic[]) => {
         this.pokemons = pokemonList;
       });
   }
@@ -48,7 +48,7 @@ export class PokemonsListComponent implements OnInit {
   onNextPokemons() {
     this.pokeapiService
       .nextPokemons()
-      .subscribe((nextPokemons: PokemonMedium[]) => {
+      .subscribe((nextPokemons: PokemonBasic[]) => {
         this.pokemons = nextPokemons;
       });
   }
@@ -56,7 +56,7 @@ export class PokemonsListComponent implements OnInit {
   onPreviousPokemons() {
     this.pokeapiService
       .previousPokemons()
-      .subscribe((previousPokemons: PokemonMedium[]) => {
+      .subscribe((previousPokemons: PokemonBasic[]) => {
         this.pokemons = previousPokemons;
       });
   }

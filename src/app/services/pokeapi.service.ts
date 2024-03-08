@@ -5,7 +5,7 @@ import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 
 import {
-  PokemonMedium,
+  PokemonBasic,
   PokemonFull,
   PokemonFullListResponse,
   PokemonListResponse,
@@ -34,14 +34,13 @@ export class PokeapiService {
   // Fetch all Pokemon names (useful for search input)
   //  - Returns from cache if available
   //  - If not, create a random captured status for each pokemon and store the list in localStorage
-  fetchAllPokemonLights(): Observable<PokemonLight[]> {
+  fetchAllPokemonLight(): Observable<PokemonLight[]> {
     const cachedList: string | null = this.localStorageService.getItem('list');
     const currentTime: number = new Date().getTime();
 
     if (cachedList) {
       const { expiringTime, list } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
-        console.log('cached list exists', list);
         return of(list);
       }
     }
@@ -74,7 +73,7 @@ export class PokeapiService {
   }
 
   // Fetch a chunk of Pokemons with minimal details
-  fetchPokemons(): Observable<PokemonMedium[]> {
+  fetchPokemons(): Observable<PokemonBasic[]> {
     return this.apollo
       .watchQuery<any>({
         query: GET_POKEMONS,
@@ -118,7 +117,7 @@ export class PokeapiService {
 
   // Returns the captured status of a Pokemon from the cached name list
   isPokemonCaptured(id: number): boolean {
-    const { _, list: allPokemons } = JSON.parse(
+    const { _, allPokemons } = JSON.parse(
       this.localStorageService.getItem('list') || '[]'
     );
     if (!allPokemons) return false;
