@@ -19,7 +19,11 @@ export const GET_POKEMONS = gql`
 
 export const GET_ALL_POKEMON_NAMES = gql`
   query getPokemons($offset: Int!, $limit: Int!) {
-    pokemon_v2_pokemon(offset: $offset, limit: $limit) {
+    pokemon_v2_pokemon(
+      offset: $offset
+      limit: $limit
+      where: { id: { _lt: 10000 } }
+    ) {
       id
       name
     }
@@ -27,7 +31,7 @@ export const GET_ALL_POKEMON_NAMES = gql`
 `;
 
 export const GET_POKEMON_DETAILS = gql`
-  query getPokemonDetails($id: Int!) {
+  query getPokemonFull($id: Int!) {
     pokemon_v2_pokemon(where: { id: { _eq: $id } }) {
       base_experience
       height
