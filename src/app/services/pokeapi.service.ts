@@ -39,9 +39,9 @@ export class PokeapiService {
     const currentTime: number = new Date().getTime();
 
     if (cachedList) {
-      const { expiringTime, list } = JSON.parse(cachedList);
+      const { expiringTime, allPokemons } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
-        return of(list);
+        return of(allPokemons);
       }
     }
 
@@ -66,7 +66,7 @@ export class PokeapiService {
           const expiringTime = currentTime + ttl;
           this.localStorageService.setItem(
             'list',
-            JSON.stringify({ expiringTime, list })
+            JSON.stringify({ expiringTime, allPokemons: list })
           );
         })
       );
@@ -125,5 +125,13 @@ export class PokeapiService {
       (pokemon: PokemonLight) => pokemon.id === id
     ).captured;
     return isCaptured;
+  }
+
+  getCapturedPokemon(): Observable<PokemonLight[]> {
+    return this.fetchAllPokemonLight().pipe(
+      map((pokemonList: PokemonLight[]) =>
+        pokemonList.filter((pokemon) => pokemon.captured)
+      )
+    );
   }
 }

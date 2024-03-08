@@ -13,8 +13,7 @@ import { PokeapiService } from '../../services/pokeapi.service';
   standalone: true,
 })
 export class PokemonSearchComponent implements OnInit {
-  @Input() names: PokemonLight[] = [];
-
+  public names: PokemonLight[] = [];
   public searchControl = new FormControl();
   public searchResults: PokemonLight[] = [];
 
@@ -23,7 +22,7 @@ export class PokemonSearchComponent implements OnInit {
   constructor(private pokeapiService: PokeapiService) {}
 
   ngOnInit(): void {
-    this.loadAllPokemonLights();
+    this.loadAllPokemonLight();
 
     this.searchControl.valueChanges
       .pipe(
@@ -31,12 +30,11 @@ export class PokemonSearchComponent implements OnInit {
         distinctUntilChanged() // Only emit when the current value is different than the last.
       )
       .subscribe((searchInput) => {
-        console.log('searchInput', searchInput);
         this.performSearch(searchInput);
       });
   }
 
-  loadAllPokemonLights() {
+  loadAllPokemonLight() {
     this.pokeapiService
       .fetchAllPokemonLight()
       .subscribe((names: PokemonLight[]) => {
@@ -47,7 +45,6 @@ export class PokemonSearchComponent implements OnInit {
   }
 
   performSearch(searchInput: string) {
-    console.log('performSearch');
     if (!searchInput) {
       this.searchResults = [];
       return;
