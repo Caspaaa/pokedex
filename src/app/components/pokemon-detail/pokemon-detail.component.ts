@@ -1,12 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
-
+import { NgIf } from '@angular/common';
+import { map } from 'rxjs';
+import { PokemonFull, PokemonLight } from '@models/pokemon.model';
+import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
-import { PokemonFull, PokemonLight } from '@models/pokemon.model';
-import { NgIf } from '@angular/common';
-import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
-import { map, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-pokemon-detail',

@@ -1,6 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { PokeapiService } from '../../services/pokeapi.service';
+import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 
 @Component({
@@ -13,12 +13,13 @@ import { Pokemon } from '@models/pokemon.model';
 export class MyPokemonsComponent {
   public capturedPokemons: Pokemon[] = [];
 
-  constructor(private pokeapiService: PokeapiService) {}
+  constructor(private pokemonDataService: PokemonDataService) {}
 
-  ngOnInit(): void {
-    this.pokeapiService.getCapturedPokemon().subscribe((capturedPokemons) => {
-      console.log('capturedPokemons', capturedPokemons);
-      this.capturedPokemons = capturedPokemons;
-    });
+  ngOnInit() {
+    if (this.pokemonDataService.pokemonList) {
+      this.capturedPokemons = this.pokemonDataService.pokemonList.filter(
+        (pokemon) => pokemon.captured
+      );
+    }
   }
 }

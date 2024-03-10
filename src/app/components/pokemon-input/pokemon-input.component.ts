@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Pokemon, PokemonLight } from '@models/pokemon.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { PokeapiService } from '../../services/pokeapi.service';
+import { Pokemon } from '@models/pokemon.model';
+import { PokemonDataService } from '../../services/pokemon-data.service';
 
 @Component({
   selector: 'app-pokemon-input',
@@ -15,15 +15,13 @@ import { PokeapiService } from '../../services/pokeapi.service';
 export class PokemonSearchComponent implements OnInit {
   public names: any = [];
   public searchControl = new FormControl();
-  public searchResults: PokemonLight[] = [];
+  public searchResults: Pokemon[] = [];
 
   public noResult = false;
 
-  constructor(private pokeapiService: PokeapiService) {}
+  constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit(): void {
-    this.loadAllPokemonLight();
-
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
@@ -34,25 +32,16 @@ export class PokemonSearchComponent implements OnInit {
       });
   }
 
-  loadAllPokemonLight() {
-    this.pokeapiService
-      .fetchAllPokemonLight()
-      .subscribe((pokemons: Pokemon[]) => {
-        if (pokemons) {
-          this.names = pokemons;
-        }
-      });
-  }
-
   performSearch(searchInput: string) {
     if (!searchInput) {
       this.searchResults = [];
       return;
     }
-
-    this.searchResults = this.names.filter((pokemon: Pokemon) =>
-      pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
-    );
+    if (this.pokemonDataService.pokemonList)
+      this.searchResults = this.pokemonDataService.pokemonList.filter(
+        (pokemon: Pokemon) =>
+          pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
+      );
 
     this.noResult = this.searchResults.length === 0;
   }

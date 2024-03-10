@@ -13,10 +13,6 @@ export class PokemonDataService {
     this.loadPokemonListFromCache();
   }
 
-  getPokemonList() {
-    return this.pokemonList;
-  }
-
   // Copy pokemon list from localStorage into a local variable
   loadPokemonListFromCache() {
     const cachedList: string | null = this.localStorageService.getItem('list');
