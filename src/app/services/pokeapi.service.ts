@@ -25,30 +25,53 @@ import {
 export class PokeapiService {
   private limit = 9;
   private offset = 0;
+  // List used as layer between application and cache
+  private pokemonList: (PokemonLight | PokemonFull)[] | null = null;
 
   constructor(
     private apollo: Apollo,
     private localStorageService: LocalStorageService
-  ) {}
+  ) {
+    this.loadPokemonListFromCache();
+  }
 
-  // TODO : variable globale avec la liste - travailler avec cette liste et à chaque fin d'action, update le localstorage avec toujours la même methode
-
-  // Fetch all Pokemon names (useful for search input)
-  //  - Returns from cache if available
-  //  - If not, create a random captured status for each pokemon and store the list in localStorage
-  fetchAllPokemonLight(): Observable<any> {
-    console.log('fetchAllPokemonLight');
+  // Copy pokemon list from localStorage into a local variable
+  loadPokemonListFromCache() {
     const cachedList: string | null = this.localStorageService.getItem('list');
     const currentTime: number = new Date().getTime();
-
     if (cachedList) {
-      const { expiringTime, allPokemons } = JSON.parse(cachedList);
+      const {
+        expiringTime,
+        allPokemons,
+      }: {
+        expiringTime: number;
+        allPokemons: (PokemonLight | PokemonFull)[];
+      } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
-        const pokemons: (PokemonLight | PokemonFull)[] = allPokemons;
-
-        return of(pokemons);
+        this.pokemonList = allPokemons;
       }
     }
+  }
+
+  // Update cache with local pokemon list
+  updateLocalStorage() {
+    if (this.pokemonList) {
+      const currentTime = new Date().getTime();
+      const expiringTime = currentTime + 7 * 24 * 60 * 60 * 1000; // 1 week
+      this.localStorageService.setItem(
+        'list',
+        JSON.stringify({
+          expiringTime,
+          allPokemons: this.pokemonList,
+        })
+      );
+    }
+  }
+
+  // Returns all pokemon names from cache
+  // Or fetch them from API and assign them a captured value before storing the list to cache
+  fetchAllPokemonLight(): Observable<(PokemonLight | PokemonFull)[]> {
+    if (this.pokemonList) return of(this.pokemonList);
 
     return this.apollo
       .watchQuery<any>({
@@ -60,22 +83,21 @@ export class PokeapiService {
       })
       .valueChanges.pipe(
         map((list: PokemonLightListResponse) => list.data.pokemon_v2_pokemon),
-        tap((list: PokemonLight[]) => {
-          const ttl = 7 * 24 * 60 * 60 * 1000; // 1 week
-          const expiringTime = currentTime + ttl;
+        map((list: PokemonLight[]) => {
+          // Add a random captured value to each pokemon so our Pokedex is not empty
           list = list.map((pokemon) => ({
             ...pokemon,
             captured: Math.random() < 0.1,
           }));
-          this.localStorageService.setItem(
-            'list',
-            JSON.stringify({ expiringTime, allPokemons: list })
-          );
+
+          this.pokemonList = list;
+          this.updateLocalStorage();
+          return this.pokemonList;
         })
       );
   }
 
-  // Fetch a chunk of Pokemons with minimal details
+  // Returns a chunk of Pokemons with basic details
   fetchPokemons(): Observable<PokemonBasic[]> {
     return this.apollo
       .watchQuery<any>({
@@ -102,28 +124,17 @@ export class PokeapiService {
 
   // Fetch a Pokemon with extensive details and add the captured property
   fetchPokemonFull(pokemonId: number): Observable<PokemonFull> {
-    // check cache
-
-    const cachedList: string | null = this.localStorageService.getItem('list');
-    const currentTime: number = new Date().getTime();
-
-    if (cachedList) {
-      const {
-        expiringTime,
-        allPokemons,
-      }: { expiringTime: number; allPokemons: (PokemonLight | PokemonFull)[] } =
-        JSON.parse(cachedList);
-
-      const pokemonIndex = allPokemons.findIndex(
-        (pokemon) => pokemon.id === Number(pokemonId)
+    // Return it from cache if available with details
+    if (this.pokemonList) {
+      const cachedPokemon = this.pokemonList.find(
+        (pokemon: PokemonLight | PokemonFull) =>
+          pokemon.id === Number(pokemonId)
       );
-
-      const cachedPokemon = allPokemons[pokemonIndex];
-
-      if ('weight' in cachedPokemon) {
+      if (cachedPokemon && 'weight' in cachedPokemon) {
         return of(cachedPokemon);
       }
     }
+    // Else fetch details from API and add the details to the cached pokemon
     return this.apollo
       .watchQuery<any>({
         query: GET_POKEMON_DETAILS,
@@ -139,63 +150,30 @@ export class PokeapiService {
       );
   }
 
+  // Adds more details to a pokemon in the cached list and returns it
   storePokemonInCache(pokemonFull: PokemonFull): PokemonFull {
-    const cachedList: string | null = this.localStorageService.getItem('list');
-    const currentTime: number = new Date().getTime();
-
-    if (cachedList) {
-      const {
-        expiringTime,
-        allPokemons,
-      }: { expiringTime: number; allPokemons: (PokemonLight | PokemonFull)[] } =
-        JSON.parse(cachedList);
-      if (currentTime < expiringTime) {
-        const pokemonIndex: number = allPokemons.findIndex(
-          (pokemon) => pokemon.id === pokemonFull.id
-        );
-        const newPokemon: PokemonFull = {
-          ...allPokemons[pokemonIndex],
-          ...pokemonFull,
-        };
-
-        allPokemons[pokemonIndex] = newPokemon;
-
-        this.localStorageService.setItem(
-          'list',
-          JSON.stringify({
-            expiringTime,
-            allPokemons: allPokemons,
-          })
-        );
-
-        return newPokemon;
-      }
+    let pokemonToStore: PokemonFull = { ...pokemonFull };
+    if (!this.pokemonList) {
+      this.pokemonList = [];
     }
-    return pokemonFull;
+    const pokemonIndex = this.pokemonList.findIndex(
+      (pokemon) => pokemon.id === pokemonFull.id
+    );
+
+    if (pokemonIndex) {
+      pokemonToStore = {
+        ...this.pokemonList[pokemonIndex],
+        ...pokemonToStore,
+      };
+      this.pokemonList[pokemonIndex] = pokemonToStore;
+    }
+
+    this.updateLocalStorage();
+
+    return pokemonToStore;
   }
 
-  // Returns the captured status of a Pokemon from the cached name list
-  isPokemonCaptured(id: number) {
-    const cachedList: string | null = this.localStorageService.getItem('list');
-
-    if (cachedList) {
-      const {
-        expiringTime,
-        allPokemons,
-      }: { expiringTime: number; allPokemons: (PokemonLight | PokemonFull)[] } =
-        JSON.parse(cachedList);
-
-      if (!allPokemons) return false;
-
-      const pokemonIndex = allPokemons.findIndex(
-        (pokemon) => pokemon.id === Number(id)
-      );
-
-      return allPokemons[pokemonIndex]?.captured;
-    }
-    return false;
-  }
-
+  // Return the list of captured pokemon from the cache or API
   getCapturedPokemon(): Observable<(PokemonLight | PokemonFull)[]> {
     return this.fetchAllPokemonLight().pipe(
       map((pokemonList: (PokemonLight | PokemonFull)[]) =>
