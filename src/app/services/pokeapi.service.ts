@@ -4,29 +4,55 @@ import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 import { LocalStorageService } from './local-storage.service';
 
-import {
-  PokemonBasic,
-  PokemonFull,
-  PokemonFullResponse,
-  PokemonListResponse,
-  PokemonLight,
-  PokemonLightListResponse,
-} from '@models/pokemon.model';
+import { Pokemon, PokemonFull, PokemonLight } from '@models/pokemon.model';
 
 import {
-  GET_POKEMONS,
-  GET_POKEMON_DETAILS,
-  GET_ALL_POKEMON_NAMES,
+  GET_POKEMON_FULL,
+  GET_ALL_POKEMON_LIGHT,
 } from '../queries/pokeapi.queries';
+
+export interface PokemonLightListResponse {
+  pokemon_v2_pokemon: Array<{
+    id: number;
+    name: string;
+    pokemon_v2_pokemontypes: Array<{
+      pokemon_v2_type: Array<{
+        name: string;
+      }>;
+    }>;
+  }>;
+}
+
+export interface PokemonListResponse {
+  pokemon_v2_pokemon: Array<{
+    id: number;
+    pokemon_v2_pokemontypes: Array<{
+      pokemon_v2_type: Array<{
+        name: string;
+      }>;
+    }>;
+  }>;
+}
+
+export interface PokemonFullResponse {
+  pokemon_v2_pokemon: PokemonFull[];
+}
+
+export interface PokemonLightQueryParams {
+  offset: number;
+  limit: number;
+}
+
+export interface PokemonFullQueryParams {
+  id: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class PokeapiService {
-  private limit = 9;
-  private offset = 0;
   // List used as layer between application and cache
-  private pokemonList: (PokemonLight | PokemonFull)[] | null = null;
+  private pokemonList: Pokemon[] | null = null;
 
   constructor(
     private apollo: Apollo,
@@ -45,7 +71,7 @@ export class PokeapiService {
         allPokemons,
       }: {
         expiringTime: number;
-        allPokemons: (PokemonLight | PokemonFull)[];
+        allPokemons: Pokemon[];
       } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
         this.pokemonList = allPokemons;
@@ -70,25 +96,29 @@ export class PokeapiService {
 
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
-  fetchAllPokemonLight(): Observable<(PokemonLight | PokemonFull)[]> {
+  fetchAllPokemonLight(): Observable<Pokemon[]> {
     if (this.pokemonList) return of(this.pokemonList);
 
     return this.apollo
-      .watchQuery<any>({
-        query: GET_ALL_POKEMON_NAMES,
+      .watchQuery<PokemonLightListResponse, PokemonLightQueryParams>({
+        query: GET_ALL_POKEMON_LIGHT,
         variables: {
           offset: 0,
           limit: 1500,
         },
       })
       .valueChanges.pipe(
-        map((list: PokemonLightListResponse) => list.data.pokemon_v2_pokemon),
-        map((list: PokemonLight[]) => {
-          // Add a random captured value to each pokemon so our Pokedex is not empty
-          list = list.map((pokemon) => ({
-            ...pokemon,
-            captured: Math.random() < 0.1,
-          }));
+        map((response) => response.data.pokemon_v2_pokemon),
+        map((rawPokemonList) => {
+          const list = rawPokemonList.map((rawPokemon): PokemonLight => {
+            const types = rawPokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type;
+            return {
+              ...rawPokemon,
+              captured: Math.random() < 0.1,
+              model_type: 'light',
+              types: ['grass'],
+            };
+          });
 
           this.pokemonList = list;
           this.updateLocalStorage();
@@ -97,54 +127,29 @@ export class PokeapiService {
       );
   }
 
-  // Returns a chunk of Pokemons with basic details
-  fetchPokemons(): Observable<PokemonBasic[]> {
-    return this.apollo
-      .watchQuery<any>({
-        query: GET_POKEMONS,
-        variables: {
-          offset: this.offset,
-          limit: this.limit,
-        },
-      })
-      .valueChanges.pipe(
-        map((list: PokemonListResponse) => list.data.pokemon_v2_pokemon)
-      );
-  }
-
-  nextPokemons() {
-    this.offset += this.limit;
-    return this.fetchPokemons();
-  }
-
-  previousPokemons() {
-    this.offset = Math.max(0, (this.offset -= this.limit));
-    return this.fetchPokemons();
-  }
-
   // Fetch a Pokemon with extensive details and add the captured property
   fetchPokemonFull(pokemonId: number): Observable<PokemonFull> {
     // Return it from cache if available with details
     if (this.pokemonList) {
       const cachedPokemon = this.pokemonList.find(
-        (pokemon: PokemonLight | PokemonFull) =>
-          pokemon.id === Number(pokemonId)
+        (pokemon) => pokemon.id === Number(pokemonId)
       );
-      if (cachedPokemon && 'weight' in cachedPokemon) {
-        return of(cachedPokemon);
+      if (cachedPokemon && cachedPokemon.model_type === 'full') {
+        return of(cachedPokemon as PokemonFull);
       }
     }
     // Else fetch details from API and add the details to the cached pokemon
     return this.apollo
-      .watchQuery<any>({
-        query: GET_POKEMON_DETAILS,
+      .watchQuery<PokemonFullResponse, PokemonFullQueryParams>({
+        query: GET_POKEMON_FULL,
         variables: { id: pokemonId },
       })
       .valueChanges.pipe(
-        map(
-          (pokemon: PokemonFullResponse) => pokemon.data.pokemon_v2_pokemon[0]
-        ),
-        map((pokemon: PokemonFull) => {
+        map((response) => {
+          const pokemon: PokemonFull = {
+            ...response.data.pokemon_v2_pokemon[0],
+            model_type: 'full',
+          };
           return this.storePokemonInCache(pokemon);
         })
       );
@@ -174,9 +179,9 @@ export class PokeapiService {
   }
 
   // Return the list of captured pokemon from the cache or API
-  getCapturedPokemon(): Observable<(PokemonLight | PokemonFull)[]> {
+  getCapturedPokemon(): Observable<Pokemon[]> {
     return this.fetchAllPokemonLight().pipe(
-      map((pokemonList: (PokemonLight | PokemonFull)[]) =>
+      map((pokemonList: Pokemon[]) =>
         pokemonList.filter((pokemon) => pokemon.captured)
       )
     );
