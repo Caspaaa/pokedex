@@ -3,6 +3,7 @@ import { Apollo } from 'apollo-angular';
 import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 
 import { LocalStorageService } from './local-storage.service';
+import { PokemonDataService } from './pokemon-data.service';
 
 import { Pokemon, PokemonFull, PokemonLight } from '@models/pokemon.model';
 
@@ -51,53 +52,16 @@ export interface PokemonFullQueryParams {
   providedIn: 'root',
 })
 export class PokeapiService {
-  // List used as layer between application and cache
-  private pokemonList: Pokemon[] | null = null;
-
   constructor(
     private apollo: Apollo,
-    private localStorageService: LocalStorageService
-  ) {
-    this.loadPokemonListFromCache();
-  }
-
-  // Copy pokemon list from localStorage into a local variable
-  loadPokemonListFromCache() {
-    const cachedList: string | null = this.localStorageService.getItem('list');
-    const currentTime: number = new Date().getTime();
-    if (cachedList) {
-      const {
-        expiringTime,
-        allPokemons,
-      }: {
-        expiringTime: number;
-        allPokemons: Pokemon[];
-      } = JSON.parse(cachedList);
-      if (currentTime < expiringTime) {
-        this.pokemonList = allPokemons;
-      }
-    }
-  }
-
-  // Update cache with local pokemon list
-  updateLocalStorage() {
-    if (this.pokemonList) {
-      const currentTime = new Date().getTime();
-      const expiringTime = currentTime + 7 * 24 * 60 * 60 * 1000; // 1 week
-      this.localStorageService.setItem(
-        'list',
-        JSON.stringify({
-          expiringTime,
-          allPokemons: this.pokemonList,
-        })
-      );
-    }
-  }
+    private pokemonDataService: PokemonDataService
+  ) {}
 
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
   fetchAllPokemonLight(): Observable<Pokemon[]> {
-    if (this.pokemonList) return of(this.pokemonList);
+    if (this.pokemonDataService.pokemonList)
+      return of(this.pokemonDataService.pokemonList);
 
     return this.apollo
       .watchQuery<PokemonLightListResponse, PokemonLightQueryParams>({
@@ -120,9 +84,9 @@ export class PokeapiService {
             };
           });
 
-          this.pokemonList = list;
-          this.updateLocalStorage();
-          return this.pokemonList;
+          this.pokemonDataService.pokemonList = list;
+          this.pokemonDataService.updateLocalStorage();
+          return this.pokemonDataService.pokemonList;
         })
       );
   }
@@ -130,8 +94,8 @@ export class PokeapiService {
   // Fetch a Pokemon with extensive details and add the captured property
   fetchPokemonFull(pokemonId: number): Observable<PokemonFull> {
     // Return it from cache if available with details
-    if (this.pokemonList) {
-      const cachedPokemon = this.pokemonList.find(
+    if (this.pokemonDataService.pokemonList) {
+      const cachedPokemon = this.pokemonDataService.pokemonList.find(
         (pokemon) => pokemon.id === Number(pokemonId)
       );
       if (cachedPokemon && cachedPokemon.model_type === 'full') {
@@ -150,32 +114,9 @@ export class PokeapiService {
             ...response.data.pokemon_v2_pokemon[0],
             model_type: 'full',
           };
-          return this.storePokemonInCache(pokemon);
+          return this.pokemonDataService.storePokemonInCache(pokemon);
         })
       );
-  }
-
-  // Adds more details to a pokemon in the cached list and returns it
-  storePokemonInCache(pokemonFull: PokemonFull): PokemonFull {
-    let pokemonToStore: PokemonFull = { ...pokemonFull };
-    if (!this.pokemonList) {
-      this.pokemonList = [];
-    }
-    const pokemonIndex = this.pokemonList.findIndex(
-      (pokemon) => pokemon.id === pokemonFull.id
-    );
-
-    if (pokemonIndex) {
-      pokemonToStore = {
-        ...this.pokemonList[pokemonIndex],
-        ...pokemonToStore,
-      };
-      this.pokemonList[pokemonIndex] = pokemonToStore;
-    }
-
-    this.updateLocalStorage();
-
-    return pokemonToStore;
   }
 
   // Return the list of captured pokemon from the cache or API
