@@ -12,12 +12,19 @@
   /> -->
   <div>id: {{ pokemonFull.id }}</div>
   <div>name: {{ pokemonFull.name }}</div>
-  <div>base_experience: {{ pokemonFull.base_experience }}</div>
-  <div>order: {{ pokemonFull.order }}</div>
+  <div>height: {{ pokemonFull.height }}</div>
   <div>weight: {{ pokemonFull.weight }}</div>
-  <div>slot: {{ pokemonFull.pokemon_v2_pokemontypes[0]?.slot }}</div>
   <div>
-    type: {{ pokemonFull.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name }}
+    types:
+    <div *ngFor="let type of pokemonFull.types">
+      <div>{{ type }}</div>
+    </div>
+  </div>
+  <div>
+    stats:
+    <div *ngFor="let stat of pokemonFull.stats">
+      <div>{{ stat.name }}: {{ stat.value }}</div>
+    </div>
   </div>
   <div>captured: {{ pokemonFull.captured ? "captured" : "not captured" }}</div>
   <button (click)="togglePokemonCapture()">

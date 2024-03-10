@@ -21,30 +21,20 @@ export const GET_ALL_POKEMON_LIGHT = gql`
 export const GET_POKEMON_FULL = gql`
   query getPokemonFull($id: Int!) {
     pokemon_v2_pokemon(where: { id: { _eq: $id } }) {
-      base_experience
-      height
       id
       name
-      order
+      height
       weight
       pokemon_v2_pokemontypes {
-        slot
         pokemon_v2_type {
           name
         }
       }
-      pokemon_v2_pokemonmoves {
-        move_id
-        level
-        pokemon_v2_move {
+      pokemon_v2_pokemonstats {
+        base_stat
+        pokemon_v2_stat {
           name
-          accuracy
-          pp
-          power
         }
-      }
-      pokemon_v2_pokemonspecy {
-        name
       }
     }
   }

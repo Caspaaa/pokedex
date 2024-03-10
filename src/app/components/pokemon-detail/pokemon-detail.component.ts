@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
+
 import { map } from 'rxjs';
 import { PokemonFull, PokemonLight } from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
@@ -10,7 +11,13 @@ import { CapturedPokemonsService } from '../../services/captured-pokemons.servic
 @Component({
   selector: 'app-pokemon-detail',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgIf, PokemonSearchComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    NgIf,
+    PokemonSearchComponent,
+    CommonModule,
+  ],
   templateUrl: './pokemon-detail.component.html',
   styleUrl: './pokemon-detail.component.css',
 })
@@ -35,7 +42,6 @@ export class PokemonDetailComponent {
     this.pokeapiService
       .fetchPokemonFull(id)
       .subscribe((pokemon: PokemonFull) => {
-        console.log('pokemon', pokemon);
         if (pokemon) {
           this.pokemonFull = pokemon;
         }

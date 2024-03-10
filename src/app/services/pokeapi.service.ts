@@ -5,7 +5,12 @@ import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { PokemonDataService } from './pokemon-data.service';
 
-import { Pokemon, PokemonFull, PokemonLight } from '@models/pokemon.model';
+import {
+  Pokemon,
+  PokemonFull,
+  PokemonLight,
+  Stat,
+} from '@models/pokemon.model';
 
 import {
   GET_POKEMON_FULL,
@@ -36,7 +41,23 @@ export interface PokemonListResponse {
 }
 
 export interface PokemonFullResponse {
-  pokemon_v2_pokemon: PokemonFull[];
+  pokemon_v2_pokemon: {
+    id: number;
+    name: string;
+    height: number;
+    weight: number;
+    pokemon_v2_pokemontypes: Array<{
+      pokemon_v2_type: Array<{
+        name: string;
+      }>;
+    }>;
+    pokemon_v2_pokemonstats: Array<{
+      base_stat: number;
+      pokemon_v2_stat: Array<{
+        name: string;
+      }>;
+    }>;
+  };
 }
 
 export interface PokemonLightQueryParams {
@@ -74,13 +95,19 @@ export class PokeapiService {
       .valueChanges.pipe(
         map((response) => response.data.pokemon_v2_pokemon),
         map((rawPokemonList) => {
+          // TODO - Set types
           const list = rawPokemonList.map((rawPokemon): PokemonLight => {
-            const types = rawPokemon.pokemon_v2_pokemontypes[0].pokemon_v2_type;
+            const typesResponse: any = rawPokemon.pokemon_v2_pokemontypes;
+            const rawTypesList: any = typesResponse.map(
+              (type: any) => type.pokemon_v2_type
+            );
+            const typesList: any = rawTypesList.map((item: any) => item.name);
+
             return {
               ...rawPokemon,
               captured: Math.random() < 0.1,
               model_type: 'light',
-              types: ['grass'],
+              types: typesList,
             };
           });
 
@@ -110,9 +137,21 @@ export class PokeapiService {
       })
       .valueChanges.pipe(
         map((response) => {
+          // TODO - Set types
+          const pokemonResponse: any = response.data.pokemon_v2_pokemon;
+          const pokemonData: any = pokemonResponse[0];
+          const pokemonStats: any = pokemonData.pokemon_v2_pokemonstats.map(
+            (stat: any) => {
+              return {
+                name: stat.pokemon_v2_stat.name,
+                value: stat.base_stat,
+              };
+            }
+          );
           const pokemon: PokemonFull = {
-            ...response.data.pokemon_v2_pokemon[0],
+            ...pokemonData,
             model_type: 'full',
+            stats: pokemonStats,
           };
           return this.pokemonDataService.storePokemonInCache(pokemon);
         })
