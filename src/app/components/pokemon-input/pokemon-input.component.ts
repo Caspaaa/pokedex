@@ -37,7 +37,7 @@ export class PokemonSearchComponent implements OnInit {
   loadAllPokemonLight() {
     this.pokeapiService
       .fetchAllPokemonLight()
-      .subscribe((pokemons: PokemonLight[]) => {
+      .subscribe((pokemons: (PokemonLight | PokemonFull)[]) => {
         if (pokemons) {
           this.names = pokemons;
         }
@@ -50,8 +50,9 @@ export class PokemonSearchComponent implements OnInit {
       return;
     }
 
-    this.searchResults = this.names.filter((pokemon: PokemonLight) =>
-      pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
+    this.searchResults = this.names.filter(
+      (pokemon: PokemonLight | PokemonFull) =>
+        pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
     );
 
     this.noResult = this.searchResults.length === 0;
