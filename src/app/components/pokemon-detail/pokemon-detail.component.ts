@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
 
 import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
-import { PokemonFull } from '@models/pokemon.model';
+import { PokemonFull, PokemonLight } from '@models/pokemon.model';
 import { NgIf } from '@angular/common';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 import { map, of, switchMap, tap } from 'rxjs';
@@ -35,9 +35,10 @@ export class PokemonDetailComponent {
   loadPokemonFull(id: number) {
     this.pokeapiService
       .fetchPokemonFull(id)
-      .subscribe((pokemonFull: PokemonFull) => {
-        if (pokemonFull) {
-          this.pokemonFull = pokemonFull;
+      .subscribe((pokemon: PokemonFull) => {
+        console.log('pokemon', pokemon);
+        if (pokemon) {
+          this.pokemonFull = pokemon;
         }
       });
   }
