@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-
-import { PokeapiService } from '../../services/pokeapi.service';
-
+import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 
@@ -21,36 +19,37 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
-  pokemons: Array<Pokemon> = [];
+  limit: number = 10;
+  offset: number = 0;
+  list_length: number = 0;
+  displayed_pokemons: Pokemon[] = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
-  isLoading: boolean = false;
 
-  constructor(private pokeapiService: PokeapiService) {}
+  constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit() {
-    this.loadPokemons();
+    if (this.pokemonDataService.pokemonList)
+      this.list_length = this.pokemonDataService.pokemonList.length;
+    this.slicePokemonList();
   }
 
-  loadPokemons() {
-    this.pokeapiService
-      .fetchAllPokemonLight()
-      .subscribe((pokemonList: Pokemon[]) => {
-        this.pokemons = pokemonList;
-      });
+  slicePokemonList() {
+    if (this.pokemonDataService.pokemonList) {
+      this.displayed_pokemons = this.pokemonDataService.pokemonList.slice(
+        this.offset,
+        this.offset + this.limit
+      );
+    }
   }
 
-  // onNextPokemons() {
-  //   this.pokeapiService.nextPokemons().subscribe((nextPokemons: Pokemon[]) => {
-  //     this.pokemons = nextPokemons;
-  //   });
-  // }
+  onMorePokemons() {
+    this.limit += this.limit;
+    this.slicePokemonList();
+  }
 
-  // onPreviousPokemons() {
-  //   this.pokeapiService
-  //     .previousPokemons()
-  //     .subscribe((previousPokemons: PokemonBasic[]) => {
-  //       this.pokemons = previousPokemons;
-  //     });
-  // }
+  onLessPokemons() {
+    this.limit = Math.max(10, this.limit - 10);
+    this.slicePokemonList();
+  }
 }

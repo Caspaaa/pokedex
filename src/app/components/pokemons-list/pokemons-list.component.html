@@ -3,7 +3,7 @@
 
   <div
     style="min-height: 100px; border: 1px solid gray; margin: 10px"
-    *ngFor="let pokemon of pokemons"
+    *ngFor="let pokemon of displayed_pokemons"
     [routerLink]="['/pokemon', pokemon.id]"
   >
     <div>id: {{ pokemon.id }}</div>
@@ -34,6 +34,7 @@
       /> -->
     </div>
   </div>
-  <!-- <button (click)="onPreviousPokemons()">Previous</button> -->
-  <!-- <button (click)="onNextPokemons()">Next</button> -->
+  <button *ngIf="limit > 10" (click)="onLessPokemons()">Less</button>
+  <button *ngIf="limit < list_length" (click)="onMorePokemons()">More</button>
+  {{ limit }}-{{ offset }}
 </div>
