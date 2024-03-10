@@ -1,14 +1,21 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { PokemonsListComponent } from './components/pokemons-list/pokemons-list.component';
+import { SidePanelComponent } from './components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, PokemonsListComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, SidePanelComponent],
 })
 export class AppComponent {
   title = 'pokedex';
+
+  isSidePanelOpen = false;
+
+  toggleSidePanel() {
+    console.log('toggleSidePanel');
+    this.isSidePanelOpen = !this.isSidePanelOpen;
+  }
 }
