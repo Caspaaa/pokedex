@@ -44,7 +44,7 @@ export interface PokemonFull {
   captured: boolean;
 }
 
-export interface PokemonFullListResponse {
+export interface PokemonFullResponse {
   data: {
     pokemon_v2_pokemon: PokemonFull[];
   };
