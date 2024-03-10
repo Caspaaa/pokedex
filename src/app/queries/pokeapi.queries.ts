@@ -1,23 +1,6 @@
 import gql from 'graphql-tag';
 
-export const GET_POKEMONS = gql`
-  query getPokemons($offset: Int!, $limit: Int!) {
-    pokemon_v2_pokemon(offset: $offset, limit: $limit) {
-      base_experience
-      height
-      id
-      name
-      order
-      is_default
-      pokemon_v2_pokemonsprites {
-        id
-        sprites
-      }
-    }
-  }
-`;
-
-export const GET_ALL_POKEMON_NAMES = gql`
+export const GET_ALL_POKEMON_LIGHT = gql`
   query getPokemons($offset: Int!, $limit: Int!) {
     pokemon_v2_pokemon(
       offset: $offset
@@ -26,11 +9,16 @@ export const GET_ALL_POKEMON_NAMES = gql`
     ) {
       id
       name
+      pokemon_v2_pokemontypes {
+        pokemon_v2_type {
+          name
+        }
+      }
     }
   }
 `;
 
-export const GET_POKEMON_DETAILS = gql`
+export const GET_POKEMON_FULL = gql`
   query getPokemonFull($id: Int!) {
     pokemon_v2_pokemon(where: { id: { _eq: $id } }) {
       base_experience

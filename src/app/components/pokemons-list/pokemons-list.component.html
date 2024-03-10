@@ -6,8 +6,12 @@
     *ngFor="let pokemon of pokemons"
     [routerLink]="['/pokemon', pokemon.id]"
   >
+    <div>id: {{ pokemon.id }}</div>
     <div>
-      {{ pokemon.name }}
+      types:
+      <div *ngFor="let type of pokemon.types">
+        <div>{{ type }}</div>
+      </div>
     </div>
 
     <div>
@@ -30,6 +34,6 @@
       /> -->
     </div>
   </div>
-  <button (click)="onPreviousPokemons()">Previous</button>
-  <button (click)="onNextPokemons()">Next</button>
+  <!-- <button (click)="onPreviousPokemons()">Previous</button> -->
+  <!-- <button (click)="onNextPokemons()">Next</button> -->
 </div>
