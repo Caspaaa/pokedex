@@ -19,7 +19,7 @@
   <div>
     type: {{ pokemonFull.pokemon_v2_pokemontypes[0]?.pokemon_v2_type.name }}
   </div>
-  <div>captured: {{ pokemonFull.captured }}</div>
+  <div>captured: {{ pokemonFull.captured ? "captured" : "not captured" }}</div>
   <button (click)="togglePokemonCapture()">
     {{ pokemonFull.captured ? "release" : "capture" }}
   </button>

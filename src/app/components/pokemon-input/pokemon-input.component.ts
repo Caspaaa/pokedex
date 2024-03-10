@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { PokemonBasic, PokemonLight } from '@models/pokemon.model';
+import { PokemonBasic, PokemonFull, PokemonLight } from '@models/pokemon.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PokeapiService } from '../../services/pokeapi.service';
@@ -13,7 +13,7 @@ import { PokeapiService } from '../../services/pokeapi.service';
   standalone: true,
 })
 export class PokemonSearchComponent implements OnInit {
-  public names: PokemonLight[] = [];
+  public names: any = [];
   public searchControl = new FormControl();
   public searchResults: PokemonLight[] = [];
 
@@ -37,9 +37,9 @@ export class PokemonSearchComponent implements OnInit {
   loadAllPokemonLight() {
     this.pokeapiService
       .fetchAllPokemonLight()
-      .subscribe((names: PokemonLight[]) => {
-        if (names) {
-          this.names = names;
+      .subscribe((pokemons: PokemonLight[]) => {
+        if (pokemons) {
+          this.names = pokemons;
         }
       });
   }

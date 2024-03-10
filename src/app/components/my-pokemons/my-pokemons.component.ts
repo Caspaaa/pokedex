@@ -1,7 +1,7 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { PokeapiService } from '../../services/pokeapi.service';
-import { PokemonLight } from '@models/pokemon.model';
+import { PokemonFull, PokemonLight } from '@models/pokemon.model';
 
 @Component({
   selector: 'app-my-pokemons',
@@ -11,7 +11,7 @@ import { PokemonLight } from '@models/pokemon.model';
   styleUrl: './my-pokemons.component.css',
 })
 export class MyPokemonsComponent {
-  public capturedPokemons: PokemonLight[] = [];
+  public capturedPokemons: (PokemonLight | PokemonFull)[] = [];
 
   constructor(private pokeapiService: PokeapiService) {}
 
