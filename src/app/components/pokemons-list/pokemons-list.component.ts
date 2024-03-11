@@ -5,6 +5,7 @@ import { PokemonDataService } from '../../services/pokemon-data.service';
 import { PokeapiService } from '../../services/pokeapi.service';
 import { Pokemon } from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
+import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
 
 @Component({
   selector: 'app-pokemons-list',
@@ -15,6 +16,7 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
     RouterLink,
     RouterLinkActive,
     PokemonSearchComponent,
+    PokemonTileComponent,
   ],
   templateUrl: './pokemons-list.component.html',
   styleUrl: './pokemons-list.component.css',
