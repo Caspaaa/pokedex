@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MyPokemonsComponent } from '../my-pokemons/my-pokemons.component';
 import { NgIf, NgFor } from '@angular/common';
-import { PokeapiService } from '../../services/pokeapi.service';
+import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 
 @Component({
@@ -16,16 +16,16 @@ export class SidePanelComponent {
 
   @Output() closePanel = new EventEmitter<void>();
 
-  public pokemons: Pokemon[] = [];
+  public capturedPokemons: Pokemon[] = [];
 
-  constructor(private pokeapiService: PokeapiService) {}
+  constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit() {
-    this.pokeapiService
-      .fetchAllPokemonLight()
-      .subscribe((pokemons: Pokemon[]) => {
-        this.pokemons = pokemons;
-      });
+    if (this.pokemonDataService.pokemonList) {
+      this.capturedPokemons = this.pokemonDataService.pokemonList.filter(
+        (pokemon) => pokemon.captured
+      );
+    }
   }
 
   close() {
