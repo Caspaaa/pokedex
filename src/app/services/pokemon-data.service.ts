@@ -56,14 +56,13 @@ export class PokemonDataService {
       (pokemon) => pokemon.id === pokemonFull.id
     );
 
-    if (pokemonIndex) {
+    if (pokemonIndex !== -1) {
       pokemonToStore = {
         ...this.pokemonList[pokemonIndex],
         ...pokemonToStore,
       };
       this.pokemonList[pokemonIndex] = pokemonToStore;
     }
-
     this.updateLocalStorage();
 
     return pokemonToStore;
