@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 
@@ -7,6 +7,7 @@ import { PokemonFull, PokemonLight } from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
+import { PokemonDataService } from '../../services/pokemon-data.service';
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -23,14 +24,23 @@ import { CapturedPokemonsService } from '../../services/captured-pokemons.servic
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
+  @ViewChild('buttonPrevious')
+  buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
+  @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
+    null;
 
   constructor(
     private pokeapiService: PokeapiService,
+    private pokemonDataService: PokemonDataService,
     private route: ActivatedRoute,
     private capturePokemonsService: CapturedPokemonsService
   ) {}
 
   ngOnInit() {
+    if (!this.pokemonDataService.pokemonList) {
+      this.pokeapiService.fetchAllPokemonLight().subscribe();
+    }
+
     const UriPokemonId = this.route.params.pipe(map((params) => params['id']));
 
     UriPokemonId.subscribe((id) => {
@@ -53,5 +63,16 @@ export class PokemonDetailComponent {
       this.pokemonFull.captured = !this.pokemonFull?.captured;
       this.capturePokemonsService.toggleCapturedStatus(this.pokemonFull.id);
     }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    console.log('event');
+    if (this.buttonPrevious)
+      if (event.key === 'ArrowLeft') {
+        if (this.buttonPrevious) this.buttonPrevious.nativeElement.click();
+      } else if (event.key === 'ArrowRight') {
+        if (this.buttonNext) this.buttonNext.nativeElement.click();
+      }
   }
 }

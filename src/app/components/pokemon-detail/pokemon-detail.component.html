@@ -37,10 +37,13 @@
     {{ pokemonFull.captured ? "release" : "capture" }}
   </button>
   <button
+    #buttonPrevious
     [routerLink]="['/pokemon', pokemonFull.id - 1]"
     [disabled]="pokemonFull.id === 1"
   >
     previous
   </button>
-  <button [routerLink]="['/pokemon', pokemonFull.id + 1]">next</button>
+  <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
+    next
+  </button>
 </div>

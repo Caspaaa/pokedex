@@ -15,7 +15,6 @@ export class AppComponent {
   isSidePanelOpen = false;
 
   toggleSidePanel() {
-    console.log('toggleSidePanel');
     this.isSidePanelOpen = !this.isSidePanelOpen;
   }
 }
