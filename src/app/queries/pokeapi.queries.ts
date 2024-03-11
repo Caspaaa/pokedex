@@ -36,6 +36,18 @@ export const GET_POKEMON_FULL = gql`
           name
         }
       }
+      pokemon_v2_pokemonmoves(
+        where: { level: { _neq: 0 }, version_group_id: { _eq: 1 } }
+      ) {
+        level
+        pokemon_v2_move {
+          name
+          accuracy
+          pp
+          power
+        }
+        version_group_id
+      }
     }
   }
 `;

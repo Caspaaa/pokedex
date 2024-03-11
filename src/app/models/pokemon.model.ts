@@ -15,9 +15,18 @@ export interface PokemonFull extends Pokemon {
   height: number;
   weight: number;
   stats: Stat[];
+  moves: Move[];
 }
 
 export interface Stat {
   name: string;
   value: number;
+}
+
+export interface Move {
+  name: string;
+  level: number;
+  accuracy: number;
+  pp: number;
+  power: number;
 }

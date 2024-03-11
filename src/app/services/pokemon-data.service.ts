@@ -32,15 +32,15 @@ export class PokemonDataService {
   }
 
   // Update cache with local pokemon list
-  updateLocalStorage() {
-    if (this.pokemonList) {
+  updateLocalStorage(pokemonList: Pokemon[] | null = this.pokemonList) {
+    if (pokemonList) {
       const currentTime = new Date().getTime();
       const expiringTime = currentTime + 7 * 24 * 60 * 60 * 1000; // 1 week
       this.localStorageService.setItem(
         'list',
         JSON.stringify({
           expiringTime,
-          allPokemons: this.pokemonList,
+          allPokemons: pokemonList,
         })
       );
     }

@@ -1,8 +1,8 @@
 <app-pokemon-input></app-pokemon-input>
 <div *ngIf="pokemonFull">
   <img
-    height="300"
-    height="300"
+    height="30"
+    height="30"
     src="https://img.pokemondb.net/artwork/{{ pokemonFull.name }}.jpg"
   />
   <!-- <img
@@ -15,15 +15,21 @@
   <div>height: {{ pokemonFull.height }}</div>
   <div>weight: {{ pokemonFull.weight }}</div>
   <div>
-    types:
+    <p><strong>types</strong></p>
     <div *ngFor="let type of pokemonFull.types">
       <div>{{ type }}</div>
     </div>
   </div>
   <div>
-    stats:
+    <p><strong>stats</strong></p>
     <div *ngFor="let stat of pokemonFull.stats">
       <div>{{ stat.name }}: {{ stat.value }}</div>
+    </div>
+  </div>
+  <div>
+    <p><strong>moves</strong></p>
+    <div *ngFor="let move of pokemonFull.moves">
+      <div>{{ move.level }} - {{ move.name }}</div>
     </div>
   </div>
   <div>captured: {{ pokemonFull.captured ? "captured" : "not captured" }}</div>

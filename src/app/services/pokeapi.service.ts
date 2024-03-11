@@ -148,10 +148,23 @@ export class PokeapiService {
               };
             }
           );
+          // TODO - Set types
+          const rawPokemonMoves: any = pokemonData.pokemon_v2_pokemonmoves;
+          const pokemonMoves = rawPokemonMoves.map((move: any) => {
+            return {
+              name: move.pokemon_v2_move.name,
+              level: move.level,
+              accuracy: move.pokemon_v2_move.accuracy,
+              pp: move.pokemon_v2_move.pp,
+              power: move.pokemon_v2_move.power,
+            };
+          });
+
           const pokemon: PokemonFull = {
             ...pokemonData,
             model_type: 'full',
             stats: pokemonStats,
+            moves: pokemonMoves,
           };
           return this.pokemonDataService.storePokemonInCache(pokemon);
         })
