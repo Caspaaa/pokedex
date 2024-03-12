@@ -1,11 +1,11 @@
-<div class="p-6">
-  <app-pokemon-input></app-pokemon-input>
-
-  <app-pokemon-tile
-    *ngFor="let pokemon of displayed_pokemons"
-    [pokemon]="pokemon"
-  ></app-pokemon-tile>
-
+<div class="flex flex-col items-center justify-center px-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <app-pokemon-tile
+      *ngFor="let pokemon of displayed_pokemons"
+      [pokemon]="pokemon"
+      class="flex"
+    ></app-pokemon-tile>
+  </div>
   <button *ngIf="limit > 10" (click)="onLessPokemons()">Less</button>
   <button *ngIf="limit < list_length" (click)="onMorePokemons()">More</button>
   {{ limit }}-{{ offset }}
