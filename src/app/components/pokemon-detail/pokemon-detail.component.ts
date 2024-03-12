@@ -29,6 +29,7 @@ import {
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
+  color: string = '';
   @ViewChild('buttonPrevious')
   buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
   @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
@@ -51,6 +52,7 @@ export class PokemonDetailComponent {
 
     UriPokemonId.subscribe((id) => {
       this.loadPokemonFull(id);
+      this.getBackground();
     });
   }
 
@@ -79,5 +81,12 @@ export class PokemonDetailComponent {
       } else if (event.key === 'ArrowRight') {
         if (this.buttonNext) this.buttonNext.nativeElement.click();
       }
+  }
+
+  getBackground() {
+    if (this.pokemonFull) {
+      const mainType = this.pokemonFull.types[0];
+      this.color = getGradientForType(mainType as PokemonType);
+    }
   }
 }

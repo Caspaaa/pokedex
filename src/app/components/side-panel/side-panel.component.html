@@ -1,9 +1,13 @@
 <div class="side-panel relative" [class.open]="isOpen">
   <div class="sticky top-0 bg-white z-50">
-    <div class="flex justify-center items-center h-16">My Pokémons</div>
+    <div
+      class="flex justify-center items-center h-24 text-2xl font-pocket text-gray-500"
+    >
+      My Pokémons
+    </div>
     <button
       (click)="close()"
-      class="absolute top-3 right-3 p-2 rounded-full duration-200 hover:bg-gray-100 cursor-pointer"
+      class="absolute top-6 right-6 p-2 rounded-full duration-200 hover:bg-gray-100 cursor-pointer"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 import { PokeapiService } from '../../services/pokeapi.service';
@@ -17,6 +17,7 @@ import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
     RouterLinkActive,
     PokemonSearchComponent,
     PokemonTileComponent,
+    NgStyle,
   ],
   templateUrl: './pokemons-list.component.html',
   styleUrl: './pokemons-list.component.css',
