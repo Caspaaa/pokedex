@@ -8,6 +8,11 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
 import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
 import { PokemonDataService } from '../../services/pokemon-data.service';
+import {
+  getGradientForType,
+  getColorForType,
+  PokemonType,
+} from '../../utils/types-gradients';
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -24,10 +29,12 @@ import { PokemonDataService } from '../../services/pokemon-data.service';
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
+  type: PokemonType = 'default';
   @ViewChild('buttonPrevious')
   buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
   @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
     null;
+  elementRef: any;
 
   constructor(
     private pokeapiService: PokeapiService,
@@ -46,6 +53,8 @@ export class PokemonDetailComponent {
     UriPokemonId.subscribe((id) => {
       this.loadPokemonFull(id);
     });
+
+    if (this.pokemonFull) this.type = this.pokemonFull.types[0] as PokemonType;
   }
 
   loadPokemonFull(id: number) {
