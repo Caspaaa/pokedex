@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Pokemon } from '@models/pokemon.model';
@@ -19,7 +19,10 @@ export class PokemonSearchComponent implements OnInit {
   public showResults: boolean = false;
   public noResult = false;
 
-  constructor(private pokemonDataService: PokemonDataService) {}
+  constructor(
+    private pokemonDataService: PokemonDataService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.searchControl.valueChanges
@@ -50,5 +53,13 @@ export class PokemonSearchComponent implements OnInit {
   hideResults() {
     this.showResults = false;
     this.searchControl.reset();
+  }
+
+  goToFirstResult(): void {
+    if (this.searchResults.length > 0) {
+      const firstResultId = this.searchResults[0].id;
+      this.router.navigate(['/pokemon', firstResultId]);
+      this.hideResults();
+    }
   }
 }

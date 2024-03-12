@@ -2,12 +2,17 @@
   <div class="relative mx-auto text-gray-600">
     <input
       [formControl]="searchControl"
+      (keyup.enter)="goToFirstResult()"
       class="bg-white h-12 px-5 pr-16 rounded-full text-md focus:outline-none"
       type="search"
       name="search"
       placeholder="Search Pokémon"
     />
-    <button type="submit" class="absolute right-0 top-0 mt-4 mr-4">
+    <button
+      type="submit"
+      (click)="goToFirstResult()"
+      class="absolute right-0 top-0 mt-4 mr-4"
+    >
       <svg
         class="text-gray-400 h-4 w-4 fill-current"
         xmlns="http://www.w3.org/2000/svg"
