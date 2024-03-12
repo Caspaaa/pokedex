@@ -8,11 +8,6 @@ import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component
 import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
 import { PokemonDataService } from '../../services/pokemon-data.service';
-import {
-  getGradientForType,
-  getColorForType,
-  PokemonType,
-} from '../../utils/types-gradients';
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -29,7 +24,6 @@ import {
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
-  color: string = '';
   @ViewChild('buttonPrevious')
   buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
   @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
@@ -52,7 +46,6 @@ export class PokemonDetailComponent {
 
     UriPokemonId.subscribe((id) => {
       this.loadPokemonFull(id);
-      this.getBackground();
     });
   }
 
@@ -81,12 +74,5 @@ export class PokemonDetailComponent {
       } else if (event.key === 'ArrowRight') {
         if (this.buttonNext) this.buttonNext.nativeElement.click();
       }
-  }
-
-  getBackground() {
-    if (this.pokemonFull) {
-      const mainType = this.pokemonFull.types[0];
-      this.color = getGradientForType(mainType as PokemonType);
-    }
   }
 }

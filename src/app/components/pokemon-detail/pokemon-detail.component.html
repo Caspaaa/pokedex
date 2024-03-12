@@ -1,7 +1,7 @@
 <div
   *ngIf="pokemonFull && pokemonFull.types"
   class="px-4 h-screen pt-[96px]"
-  [ngStyle]="{ background: color }"
+  [ngClass]="'bg-gradient-' + pokemonFull.types[0]"
 >
   <div class="flex flex-wrap">
     <!-- Image section -->
