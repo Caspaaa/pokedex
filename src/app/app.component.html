@@ -2,5 +2,5 @@
   [isOpen]="isSidePanelOpen"
   (closePanel)="toggleSidePanel()"
 ></app-side-panel>
-<button (click)="toggleSidePanel()">My Pokémons</button>
+<app-menu (togglePanel)="toggleSidePanel()"></app-menu>
 <router-outlet></router-outlet>

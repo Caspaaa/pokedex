@@ -1,0 +1,18 @@
+<div class="flex flex-wrap items-center justify-between px-4 py-6">
+  <app-pokemon-input></app-pokemon-input>
+  <div (click)="toggleSidePanel()">
+    <div
+      class="flex h-12 py-3 px-3 sm:px-4 mx-1 rounded-full cursor-pointer"
+      [ngStyle]="{ 'background-color': 'rgb(67 149 110 / 60%)' }"
+    >
+      <span class="hidden sm:flex text-white font-pocket text-xl"
+        >My pokemons</span
+      >
+      <img
+        src="https://tcg.pokemon.com/assets/img/parents-guide/header/pokeball.png"
+        alt="pokeball-icon"
+        class="h-6 sm:ml-2"
+      />
+    </div>
+  </div>
+</div>
