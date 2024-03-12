@@ -1,45 +1,143 @@
-<div *ngIf="pokemonFull">
-  <img
-    height="200"
-    height="200"
-    src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{
-      pokemonFull.id
-    }}.png"
-  />
-  <div>id: {{ pokemonFull.id }}</div>
-  <div>name: {{ pokemonFull.name }}</div>
-  <div>height: {{ pokemonFull.height }}</div>
-  <div>weight: {{ pokemonFull.weight }}</div>
-  <div>
-    <p><strong>types</strong></p>
-    <div *ngFor="let type of pokemonFull.types">
-      <div>{{ type }}</div>
+<div *ngIf="pokemonFull" class="px-4 h-[calc(100vh-96px)]">
+  <div class="flex flex-wrap">
+    <!-- Image section -->
+    <div class="w-full sm:w-1/2 lg:w-2/5 2xl:w-1/3 p-8 sm:p-16">
+      <div class="relative">
+        <div class="absolute invert opacity-10 z-10 pb-16 pl-24">
+          <img
+            height="150"
+            height="150"
+            [src]="'assets/img/types/' + type + '.svg'"
+          />
+        </div>
+        <img
+          height="200"
+          height="200"
+          src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{
+            pokemonFull.id
+          }}.png"
+          class="relative z-30"
+        />
+        <div class="absolute z-0 p-2 left-0 top-0">
+          <span
+            class="font-pocket text-[5rem] text-white font-black leading-none opacity-50"
+            >{{ pokemonFull.id }}</span
+          >
+        </div>
+      </div>
+      <!-- Name -->
+      <div
+        class="font-pocket text-[3rem] sm:text-[3rem] md:text-[4rem] xl:text-[5rem] 2xl:text-[6rem] leading-none opacity-30 text-center -mt-2"
+      >
+        {{ pokemonFull.name }}
+      </div>
+      <!-- Navigation buttons -->
+      <div class="hidden sm:flex justify-center">
+        <button
+          #buttonPrevious
+          [routerLink]="['/pokemon', pokemonFull.id - 1]"
+          [disabled]="pokemonFull.id === 1"
+        >
+          <img [src]="'assets/img/left.png'" alt="left-arrow" class="h-12" />
+        </button>
+        <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
+          <img [src]="'assets/img/right.png'" alt="right-arrow" class="h-12" />
+        </button>
+      </div>
+    </div>
+    <!-- Data section -->
+    <div
+      class="flex flex-col justify-center w-full sm:w-1/2 lg:w-3/5 2xl:w-2/3"
+    >
+      <!-- <div>height: {{ pokemonFull.height }}</div>
+      <div>weight: {{ pokemonFull.weight }}</div> -->
+
+      <!-- Types -->
+      <div
+        class="flex justify-center sm:justify-start items-center bg-opacity-30 sm:bg-opacity-0 px-4 py-4 lg:py-0 rounded-3xl"
+      >
+        <div class="flex py-8 sm:py-2">
+          <div *ngFor="let type of pokemonFull.types">
+            <div class="mr-2">
+              <div
+                class="flex justify-center items-center rounded-full h-16 w-16"
+                [ngClass]="'bg-' + type"
+              >
+                <img
+                  [src]="'assets/img/types/' + type + '.svg'"
+                  class="h-10"
+                  [alt]="type"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center h-16 py-3 px-6 sm:px-4 mx-1 rounded-full cursor-pointer"
+          [ngStyle]="{ 'background-color': 'rgb(67 149 110 / 60%)' }"
+          (click)="togglePokemonCapture()"
+        >
+          <span
+            class="flex items-center text-white font-pocket text-3xl leading-none"
+            >{{ pokemonFull.captured ? "Release!" : "Capture!" }}</span
+          >
+          <img
+            src="https://tcg.pokemon.com/assets/img/parents-guide/header/pokeball.png"
+            alt="pokeball-icon"
+            class="hidden h-8 ml-4"
+          />
+        </div>
+      </div>
+      <!-- Stats & Moves wrapper -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-0 pb-12 sm:pb-0">
+        <!-- Stats -->
+        <div
+          class="bg-white bg-opacity-30 sm:bg-opacity-0 p-4 xl:p-0 rounded-3xl"
+        >
+          <p class="text-xl">Stats</p>
+          <div *ngFor="let stat of pokemonFull.stats">
+            <div class="flex items-center">
+              <div
+                class="flex items-center justify-between w-full rounded-full my-1 bg-opacity-20"
+                [ngClass]="'bg-' + type"
+              >
+                <div
+                  class="flex items-center justify-between rounded-full p-1"
+                  [ngStyle]="{ width: stat.value + '%' }"
+                  [ngClass]="'bg-' + type"
+                >
+                  <span class="text-white font-semibold text-md px-2">{{
+                    stat.name
+                  }}</span>
+                </div>
+                <div class="text-sm font-black text-gray-500 px-3">
+                  {{ stat.value }}
+                </div>
+              </div>
+              <div class="mx-2"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Moves -->
+        <div
+          class="bg-white bg-opacity-30 sm:bg-opacity-0 p-4 xl:p-0 rounded-3xl"
+        >
+          <p class="text-xl">Moves</p>
+          <div class="flex flex-wrap">
+            <div *ngFor="let move of pokemonFull.moves">
+              <button
+                class="flex hover:bg-blue-700 text-white font-bold py-2 p-3 rounded-lg m-1"
+                [ngClass]="'bg-' + type"
+              >
+                <span
+                  class="flex justify-center items-center bg-gray-800 bg-opacity-20 rounded-full py-1 px-2 mr-2 text-xs"
+                  >level {{ move.level }} </span
+                ><span>{{ move.name }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div>
-    <p><strong>stats</strong></p>
-    <div *ngFor="let stat of pokemonFull.stats">
-      <div>{{ stat.name }}: {{ stat.value }}</div>
-    </div>
-  </div>
-  <div>
-    <p><strong>moves</strong></p>
-    <div *ngFor="let move of pokemonFull.moves">
-      <div>{{ move.level }} - {{ move.name }}</div>
-    </div>
-  </div>
-  <div>captured: {{ pokemonFull.captured ? "captured" : "not captured" }}</div>
-  <button (click)="togglePokemonCapture()">
-    {{ pokemonFull.captured ? "release" : "capture" }}
-  </button>
-  <button
-    #buttonPrevious
-    [routerLink]="['/pokemon', pokemonFull.id - 1]"
-    [disabled]="pokemonFull.id === 1"
-  >
-    previous
-  </button>
-  <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
-    next
-  </button>
 </div>
