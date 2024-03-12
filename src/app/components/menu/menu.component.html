@@ -2,11 +2,12 @@
   class="absolute w-full bg-transparent h-[96px] flex flex-wrap items-center justify-between px-4 py-6"
 >
   <div class="flex flex-wrap">
-    <div
+    <button
+      [routerLink]="['/']"
       class="flex items-center justify-center h-12 w-12 mr-2 rounded-full cursor-pointer bg-gray-500 bg-opacity-30"
     >
       <img class="h-5 w-5" [src]="'assets/img/icons/home-icon.png'" />
-    </div>
+    </button>
     <app-pokemon-input></app-pokemon-input>
   </div>
   <div (click)="toggleSidePanel()">
