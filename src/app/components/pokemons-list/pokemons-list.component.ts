@@ -22,7 +22,8 @@ import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
   styleUrl: './pokemons-list.component.css',
 })
 export class PokemonsListComponent implements OnInit {
-  limit: number = 10;
+  CHUNK: number = 8;
+  limit: number = this.CHUNK;
   offset: number = 0;
   list_length: number = 0;
   displayed_pokemons: Pokemon[] = [];
@@ -59,7 +60,7 @@ export class PokemonsListComponent implements OnInit {
   }
 
   onLessPokemons() {
-    this.limit = Math.max(10, this.limit - 10);
+    this.limit = Math.max(this.CHUNK, this.limit - this.CHUNK);
     this.slicePokemonList();
   }
 }
