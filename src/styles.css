@@ -10,3 +10,11 @@
     font-style: normal;
   }
 }
+
+body {
+  background-image: linear-gradient(
+    45deg,
+    rgb(33 212 182 / 50%) 0%,
+    rgb(134 213 134 / 50%) 100%
+  );
+}
