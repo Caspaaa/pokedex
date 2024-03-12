@@ -28,6 +28,6 @@
 @media only screen and (max-width: 600px) {
   .side-panel {
     width: 100%;
-    left: 0;
+    right: -100%;
   }
 }
