@@ -1,6 +1,50 @@
-<div class="side-panel" [class.open]="isOpen">
-  <button (click)="close()">Close</button>
+<div class="side-panel relative" [class.open]="isOpen">
+  <div class="sticky top-0 bg-white z-20">
+    <div class="flex justify-center items-center h-16">My Pokémons</div>
+    <button
+      (click)="close()"
+      class="absolute top-3 right-3 p-2 rounded-full duration-200 hover:bg-gray-100 cursor-pointer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-7 w-7 text-gray-300"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button>
+  </div>
   <div *ngFor="let pokemon of capturedPokemons">
-    <div>{{ pokemon.name }}</div>
+    <div [routerLink]="['/pokemon', pokemon.id]">
+      <div
+        class="flex flex-wrap items-center rounded-full px-2 bg-gray-50 hover:bg-gray-200 duration-300 m-2 cursor-pointer"
+      >
+        <div class="h-12 w-12 rounded-full bg-gray-200 my-1">
+          <img
+            height="30"
+            height="30"
+            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{{
+              pokemon.id
+            }}.png"
+            class="relative z-10"
+          />
+        </div>
+        <div class="flex flex-wrap items-center justify-between ml-2 px-2 grow">
+          <div class="text-xl text-gray-400 capitalize">
+            {{ pokemon.name }}
+          </div>
+          <div
+            class="font-mono text-xl font-black ml-4 text-gray-200 leading-none"
+          >
+            #{{ pokemon.id }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

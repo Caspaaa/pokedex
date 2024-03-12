@@ -3,11 +3,12 @@ import { MyPokemonsComponent } from '../my-pokemons/my-pokemons.component';
 import { NgIf, NgFor } from '@angular/common';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-side-panel',
   standalone: true,
-  imports: [MyPokemonsComponent, NgFor],
+  imports: [MyPokemonsComponent, NgFor, RouterLink],
   templateUrl: './side-panel.component.html',
   styleUrls: ['./side-panel.component.css'],
 })
@@ -17,6 +18,7 @@ export class SidePanelComponent {
   @Output() closePanel = new EventEmitter<void>();
 
   public capturedPokemons: Pokemon[] = [];
+  result: any;
 
   constructor(private pokemonDataService: PokemonDataService) {}
 
