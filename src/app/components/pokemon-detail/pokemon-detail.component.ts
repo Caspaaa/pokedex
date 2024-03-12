@@ -29,7 +29,6 @@ import {
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
-  type: PokemonType = 'default';
   @ViewChild('buttonPrevious')
   buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
   @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
@@ -53,8 +52,6 @@ export class PokemonDetailComponent {
     UriPokemonId.subscribe((id) => {
       this.loadPokemonFull(id);
     });
-
-    if (this.pokemonFull) this.type = this.pokemonFull.types[0] as PokemonType;
   }
 
   loadPokemonFull(id: number) {
@@ -76,7 +73,6 @@ export class PokemonDetailComponent {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    console.log('event');
     if (this.buttonPrevious)
       if (event.key === 'ArrowLeft') {
         if (this.buttonPrevious) this.buttonPrevious.nativeElement.click();
