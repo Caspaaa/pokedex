@@ -1,6 +1,6 @@
 <div
   *ngIf="pokemon"
-  [routerLink]="['/pokemon', pokemon?.id]"
+  [routerLink]="['/pokemon', pokemon.id]"
   [ngClass]="'bg-gradient-' + pokemon.types[0]"
   [ngStyle]="{
     'box-shadow':
