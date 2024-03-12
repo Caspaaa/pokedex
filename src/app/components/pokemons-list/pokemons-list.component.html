@@ -1,4 +1,10 @@
-<div class="flex flex-col items-center justify-center px-4">
+<div
+  class="flex flex-col items-center justify-center px-4 pt-[96px] md:h-screen overflow-y-scroll"
+  [ngStyle]="{
+    background:
+      'linear-gradient(45deg, rgb(33, 212, 182, 0.5) 0%, rgb(134, 213, 134, 0.5) 100%)'
+  }"
+>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
     <app-pokemon-tile
       *ngFor="let pokemon of displayed_pokemons"

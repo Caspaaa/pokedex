@@ -1,5 +1,14 @@
-<div class="flex flex-wrap items-center justify-between px-4 py-6">
-  <app-pokemon-input></app-pokemon-input>
+<div
+  class="absolute w-full bg-transparent h-[96px] flex flex-wrap items-center justify-between px-4 py-6"
+>
+  <div class="flex flex-wrap">
+    <div
+      class="flex items-center justify-center h-12 w-12 mr-2 rounded-full cursor-pointer bg-gray-500 bg-opacity-30"
+    >
+      <img class="h-5 w-5" [src]="'assets/img/icons/home-icon.png'" />
+    </div>
+    <app-pokemon-input></app-pokemon-input>
+  </div>
   <div (click)="toggleSidePanel()">
     <div
       class="flex h-12 py-3 px-3 sm:px-4 mx-1 rounded-full cursor-pointer bg-gray-500 bg-opacity-30"
