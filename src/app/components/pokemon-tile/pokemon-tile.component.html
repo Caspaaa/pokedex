@@ -1,14 +1,18 @@
 <div
   [routerLink]="['/pokemon', pokemon?.id]"
-  [ngStyle]="{ 'background-image': gradient }"
-  class="rounded-3xl p-2"
+  [ngStyle]="{
+    'background-image': background,
+    'box-shadow': '0px 3px 1px ' + color + ', 0 3px 1px ' + color
+  }"
+  class="rounded-3xl p-2 max-w-60 cursor-pointer"
 >
   <div class="relative">
-    <div class="absolute z-0 p-2">
+    <div class="absolute z-0 p-2 left-0 top-0">
       <span class="text-[5rem] text-white font-black leading-none opacity-50">{{
         pokemon?.id
       }}</span>
     </div>
+    <div class="absolute z-10 p-2 right-0 bottom-0"></div>
     <div class="">
       <img
         height="70"
@@ -23,12 +27,33 @@
 
   <div>
     <div
-      class="font-pocket text-[3rem] leading-none opacity-30 text-center -mt-2"
+      class="font-pocket text-[3rem] sm:text-[3rem] md:text-[2rem] lg:text-[3rem] leading-none opacity-30 text-center -mt-2"
     >
       {{ pokemon?.name }}
     </div>
-    <div *ngFor="let type of pokemon?.types">
-      <div>{{ type }}</div>
+    <div class="flex justify-center">
+      <div
+        class="flex rounded-full h-10 p-2 mx-1"
+        [ngStyle]="{ background: color }"
+      >
+        <img
+          [src]="'assets/img/types/' + pokemon?.types?.[0] + '.svg'"
+          [alt]="pokemon?.types?.[0]"
+          class="grayscale-0 h-6 fill-current text-blue-500"
+        />
+      </div>
+
+      <div
+        *ngIf="pokemon?.captured"
+        class="flex bg-gray-500 rounded-full h-10 p-2 mx-1"
+        [ngStyle]="{ background: color }"
+      >
+        <img
+          src="https://tcg.pokemon.com/assets/img/parents-guide/header/pokeball.png"
+          alt="pokeball-icon"
+          class="h-6"
+        />
+      </div>
     </div>
   </div>
 </div>

@@ -51,6 +51,37 @@ export const typeGradients: { [key in PokemonType]: string } = {
   dark: 'linear-gradient(45deg, rgb(24, 55, 129) 0%, rgb(71, 184, 169) 100%)',
 };
 
+export const colors: { [key in PokemonType]: string } = {
+  grass: 'rgb(67 149 110)',
+  fire: 'rgb(175 131 68)',
+  water: 'rgb(61 111 153)',
+  bug: 'rgb(83 156 56)',
+  normal: 'rgb(167 154 76)',
+  poison: 'rgb(120 58 107)',
+  electric: 'rgb(167 156 70)',
+  ground: 'rgb(224, 135, 108)',
+  fairy: 'rgb(179 131 133)',
+  fighting: 'rgb(148 111 63)',
+  psychic: 'rgb(149 140 44)',
+  rock: 'rgb(106 83 47)',
+  ice: 'rgb(63 44 92)',
+  ghost: 'rgb(85 45 111)',
+  flying: 'rgb(178 122 123)',
+  dragon: 'rgb(112 129 174)',
+  steel: 'rgb(64 59 128)',
+  dark: 'rgb(28 66 99)',
+};
+
 export function getGradientForType(type: PokemonType): string {
   return typeGradients[type] || '';
 }
+
+export function getColorForType(type: PokemonType): string {
+  return colors[type] || 'rgb(24, 55, 129) 50%';
+}
+
+// export function getRandomColor(type: PokemonType): string {
+//   const randomProp = (colors: { [key in PokemonType]: string }) =>
+//     Object.keys(colors)[(Math.random() * Object.keys(colors).length) | 0];
+//   return randomProp;
+// }
