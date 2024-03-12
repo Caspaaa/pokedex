@@ -1,0 +1,25 @@
+<div class="flex justify-center items-center h-screen bg-gradient-electric">
+  <div>
+    <div
+      class="flex flex-col justify-center items-center h-72 sm:h-96 w-full sm:min-w-96 sm:max-w-96 p-4 sm:p-12 bg-no-repeat bg-contain bg-opacity-50"
+      style="background-image: url('assets/img/placeholders/pokemon-shade.png')"
+    >
+      <div class="relative">
+        <h1
+          class="absolute flex justify-center items-center w-full text-center font-pocket text-white text-[8rem] sm:text-[10rem] my-auto leading-none"
+        >
+          Oops!
+        </h1>
+      </div>
+    </div>
+    <div class="flex flex-wrap justify-center">
+      <p class="w-full text-center">Something went wrong.</p>
+      <button
+        [routerLink]="['/']"
+        class="flex bg-electric bg-opacity-80 hover:bg-opacity-100 duration-300 text-white font-bold py-2 p-3 rounded-lg m-1"
+      >
+        <span class="">Go back to homepage</span>
+      </button>
+    </div>
+  </div>
+</div>
