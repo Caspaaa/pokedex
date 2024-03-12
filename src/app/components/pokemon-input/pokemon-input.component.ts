@@ -16,7 +16,7 @@ export class PokemonSearchComponent implements OnInit {
   public names: any = [];
   public searchControl = new FormControl();
   public searchResults: Pokemon[] = [];
-
+  public showResults: boolean = false;
   public noResult = false;
 
   constructor(private pokemonDataService: PokemonDataService) {}
@@ -28,6 +28,7 @@ export class PokemonSearchComponent implements OnInit {
         distinctUntilChanged() // Only emit when the current value is different than the last.
       )
       .subscribe((searchInput) => {
+        this.showResults = true;
         this.performSearch(searchInput);
       });
   }
@@ -44,5 +45,10 @@ export class PokemonSearchComponent implements OnInit {
       );
 
     this.noResult = this.searchResults.length === 0;
+  }
+
+  hideResults() {
+    this.showResults = false;
+    this.searchControl.reset();
   }
 }
