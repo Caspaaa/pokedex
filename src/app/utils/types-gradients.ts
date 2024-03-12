@@ -16,7 +16,8 @@ export type PokemonType =
   | 'flying'
   | 'dragon'
   | 'steel'
-  | 'dark';
+  | 'dark'
+  | 'default';
 
 export const typeGradients: { [key in PokemonType]: string } = {
   grass:
@@ -49,6 +50,8 @@ export const typeGradients: { [key in PokemonType]: string } = {
     'linear-gradient(45deg, rgb(109, 125, 248) 0%, rgb(213, 245, 246) 100%)',
   steel: 'linear-gradient(45deg, rgb(73, 40, 175) 0%, rgb(121, 164, 195) 100%)',
   dark: 'linear-gradient(45deg, rgb(24, 55, 129) 0%, rgb(71, 184, 169) 100%)',
+  default:
+    'linear-gradient(45deg, rgb(24, 55, 129) 0%, rgb(71, 184, 169) 100%)',
 };
 
 export const colors: { [key in PokemonType]: string } = {
@@ -70,6 +73,7 @@ export const colors: { [key in PokemonType]: string } = {
   dragon: 'rgb(112 129 174)',
   steel: 'rgb(64 59 128)',
   dark: 'rgb(28 66 99)',
+  default: 'rgb(167 154 76)',
 };
 
 export function getGradientForType(type: PokemonType): string {
