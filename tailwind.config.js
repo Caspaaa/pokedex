@@ -33,7 +33,7 @@ module.exports = {
     "bg-grass",
     "bg-fire",
     "bg-water",
-    "bug",
+    "bg-bug",
     "bg-normal",
     "bg-poison",
     "electric",

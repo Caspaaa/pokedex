@@ -166,6 +166,10 @@ export class PokeapiService {
             stats: pokemonStats,
             moves: pokemonMoves,
           };
+          // pokemon still has the raw graphql props
+          console.log('fetchPokemonFull', pokemon);
+          console.log('pokemonMoves', pokemonMoves);
+          console.log('pokemonStats', pokemonStats);
           return this.pokemonDataService.storePokemonInCache(pokemon);
         })
       );
