@@ -44,9 +44,11 @@ export class PokemonSearchComponent implements OnInit {
     this.pokemonDataService.pokemonList
       .pipe(
         tap((list) => {
-          this.searchResults = list.filter((pokemon: Pokemon) =>
-            pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
-          );
+          this.searchResults = list
+            .filter((pokemon: Pokemon) =>
+              pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
+            )
+            .slice(0, 6);
         })
       )
       .subscribe();

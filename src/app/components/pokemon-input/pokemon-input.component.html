@@ -37,7 +37,7 @@
 
   <div
     *ngIf="showResults && searchResults.length > 0"
-    class="absolute bg-white rounded-3xl mt-4 p-4 z-50 w-[90%] left-[5%] sm:left-0 sm:w-96 xl:w-90 max-h-[calc(100vh-106px)] overflow-y-scroll"
+    class="absolute bg-white rounded-3xl mt-4 p-4 z-50 w-[90%] left-[5%] sm:left-0 sm:w-96 xl:w-90 max-h-[calc(100vh-106px)]"
   >
     <div>
       <div *ngFor="let result of searchResults">
@@ -74,7 +74,7 @@
   </div>
   <div
     *ngIf="searchControl.value && searchResults.length === 0"
-    class="absolute bg-white rounded-3xl mt-4 p-4 z-50 w-[90%] left-[5%] sm:left-0 sm:w-96 xl:w-90 max-h-[calc(100vh-106px)] overflow-y-scroll"
+    class="absolute bg-white rounded-3xl mt-4 p-4 z-50 w-[90%] left-[5%] sm:left-0 sm:w-96 xl:w-90 max-h-[calc(100vh-106px)]"
   >
     No results found.
   </div>
