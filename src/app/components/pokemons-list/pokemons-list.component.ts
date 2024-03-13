@@ -37,13 +37,13 @@ export class PokemonsListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.pokeapiService.fetchAllPokemonLight().subscribe((response) => {
-      if (response) {
-        if (this.pokemonDataService.pokemonList)
-          this.list_length = this.pokemonDataService.pokemonList.length;
-        this.slicePokemonList();
-      }
-    });
+    // this.pokeapiService.fetchAllPokemonLight().subscribe((response) => {
+    //   if (response) {
+    if (this.pokemonDataService.pokemonList)
+      this.list_length = this.pokemonDataService.pokemonList.length;
+    this.slicePokemonList();
+    //   }
+    // });
   }
 
   slicePokemonList() {

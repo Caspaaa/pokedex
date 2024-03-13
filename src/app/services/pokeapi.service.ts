@@ -76,11 +76,14 @@ export class PokeapiService {
   constructor(
     private apollo: Apollo,
     private pokemonDataService: PokemonDataService
-  ) {}
+  ) {
+    this.fetchAllPokemonLight().subscribe();
+  }
 
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
   fetchAllPokemonLight(): Observable<Pokemon[]> {
+    console.log('fetchAllPokemonLight');
     if (this.pokemonDataService.pokemonList)
       return of(this.pokemonDataService.pokemonList);
 
