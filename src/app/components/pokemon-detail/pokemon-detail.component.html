@@ -36,25 +36,46 @@
         {{ pokemonFull.name }}
       </div>
       <!-- Navigation buttons -->
-      <div class="hidden sm:flex justify-center">
+      <div
+        class="hidden sm:flex xl:hidden sm:pt-2 items-end justify-center opacity-70"
+      >
+        <div
+          class="h-12 w-10 flex justify-center items-center font-pocket text-3xl opacity-80 text-white"
+        >
+          <span *ngIf="pokemonFull.id > 1">{{ pokemonFull.id - 1 }}</span>
+        </div>
         <button
           #buttonPrevious
           [routerLink]="['/pokemon', pokemonFull.id - 1]"
           [disabled]="pokemonFull.id === 1"
         >
           <img
-            [src]="'assets/img/icons/left-icon.png'"
+            [src]="
+              pokemonFull.id > 1
+                ? 'assets/img/icons/key-left.png'
+                : 'assets/img/icons/left-icon.png'
+            "
             alt="left-arrow"
             class="h-12"
           />
         </button>
+        <img
+          [src]="'assets/img/icons/keys-up-down.png'"
+          alt="up-down-keys"
+          class="h-[6.2rem]"
+        />
         <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
           <img
-            [src]="'assets/img/icons/right-icon.png'"
+            [src]="'assets/img/icons/key-right.png'"
             alt="right-arrow"
             class="h-12"
           />
         </button>
+        <div
+          class="h-12 px-3 flex justify-start items-center font-pocket text-3xl opacity-80 text-white"
+        >
+          {{ pokemonFull.id + 1 }}
+        </div>
       </div>
     </div>
     <!-- Data section -->
@@ -150,6 +171,46 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- Navigation buttons -->
+  <div class="hidden xl:flex sm:pt-2 items-end justify-center opacity-70">
+    <div
+      class="h-12 w-8 px-3 flex justify-start items-center font-pocket text-3xl opacity-80 text-white"
+    >
+      <span *ngIf="pokemonFull.id > 1">{{ pokemonFull.id - 1 }}</span>
+    </div>
+    <button
+      #buttonPrevious
+      [routerLink]="['/pokemon', pokemonFull.id - 1]"
+      [disabled]="pokemonFull.id === 1"
+    >
+      <img
+        [src]="
+          pokemonFull.id > 1
+            ? 'assets/img/icons/key-left.png'
+            : 'assets/img/icons/left-icon.png'
+        "
+        alt="left-arrow"
+        class="h-12 mr-0.5"
+      />
+    </button>
+    <img
+      [src]="'assets/img/icons/keys-up-down.png'"
+      alt="up-down-keys"
+      class="h-[6.2rem]"
+    />
+    <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
+      <img
+        [src]="'assets/img/icons/key-right.png'"
+        alt="right-arrow"
+        class="h-12 ml-0.5"
+      />
+    </button>
+    <div
+      class="h-12 w-10 flex justify-center items-center font-pocket text-3xl opacity-80 text-white"
+    >
+      {{ pokemonFull.id + 1 }}
     </div>
   </div>
 </div>
