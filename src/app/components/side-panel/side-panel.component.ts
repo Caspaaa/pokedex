@@ -4,6 +4,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 import { RouterLink } from '@angular/router';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-side-panel',
@@ -23,11 +24,13 @@ export class SidePanelComponent {
   constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit() {
-    if (this.pokemonDataService.pokemonList) {
-      this.capturedPokemons = this.pokemonDataService.pokemonList.filter(
-        (pokemon) => pokemon.captured
-      );
-    }
+    this.pokemonDataService.pokemonList
+      .pipe(
+        tap((list) => {
+          this.capturedPokemons = list.filter((pokemon) => pokemon.captured);
+        })
+      )
+      .subscribe();
   }
 
   close() {

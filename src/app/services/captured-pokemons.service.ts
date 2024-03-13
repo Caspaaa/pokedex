@@ -9,11 +9,18 @@ export class CapturedPokemonsService {
   constructor(private pokemonDataService: PokemonDataService) {}
 
   toggleCapturedStatus(id: number): void {
-    const currentList = this.pokemonDataService.pokemonList;
-    if (currentList) {
-      const currentPokemon = currentList.find((pokemon) => pokemon.id);
-      if (currentPokemon) currentPokemon.captured = !currentPokemon.captured;
+    const currentList = this.pokemonDataService.pokemonList.getValue();
+    const pokemonIndex = currentList.findIndex(
+      (pokemon) => pokemon.id === Number(id)
+    );
+
+    if (pokemonIndex !== -1) {
+      currentList[pokemonIndex].captured = !currentList[pokemonIndex].captured;
+
+      this.pokemonDataService.pokemonList.next(currentList);
       this.pokemonDataService.updateLocalStorage(currentList);
+    } else {
+      console.log('pokemon not in cache');
     }
   }
 }

@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
 import { Pokemon, PokemonFull } from '@models/pokemon.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PokemonDataService {
   // List used as layer between application and cache
-  public pokemonList: Pokemon[] | null = null;
+  public pokemonList = new BehaviorSubject<Pokemon[]>([]);
 
   constructor(private localStorageService: LocalStorageService) {
     this.loadPokemonListFromCache();
@@ -27,13 +28,13 @@ export class PokemonDataService {
         allPokemons: Pokemon[];
       } = JSON.parse(cachedList);
       if (currentTime < expiringTime) {
-        this.pokemonList = allPokemons;
+        this.pokemonList.next(allPokemons);
       }
     }
   }
 
   // Update cache with local pokemon list
-  updateLocalStorage(pokemonList: Pokemon[] | null = this.pokemonList) {
+  updateLocalStorage(pokemonList: Pokemon[]) {
     if (pokemonList) {
       const currentTime = new Date().getTime();
       const expiringTime = currentTime + 7 * 24 * 60 * 60 * 1000; // 1 week
@@ -47,25 +48,18 @@ export class PokemonDataService {
     }
   }
 
-  // Adds more details to a pokemon in the cached list and returns it
-  storePokemonInCache(pokemonFull: PokemonFull): PokemonFull {
-    let pokemonToStore: PokemonFull = { ...pokemonFull };
-    if (!this.pokemonList) {
-      this.pokemonList = [];
-    }
-    const pokemonIndex = this.pokemonList.findIndex(
+  // Adds more details to a pokemon in the cached list
+  storePokemonInCache(pokemonFull: PokemonFull): void {
+    const currentList = this.pokemonList.getValue();
+    const pokemonIndex = currentList.findIndex(
       (pokemon) => pokemon.id === pokemonFull.id
     );
-
     if (pokemonIndex !== -1) {
-      pokemonToStore = {
-        ...this.pokemonList[pokemonIndex],
-        ...pokemonToStore,
+      currentList[pokemonIndex] = {
+        ...currentList[pokemonIndex],
+        ...pokemonFull,
       };
-      this.pokemonList[pokemonIndex] = pokemonToStore;
     }
-    this.updateLocalStorage();
-
-    return pokemonToStore;
+    this.updateLocalStorage(currentList);
   }
 }

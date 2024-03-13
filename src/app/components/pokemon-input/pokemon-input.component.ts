@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { Pokemon } from '@models/pokemon.model';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 
@@ -41,11 +41,15 @@ export class PokemonSearchComponent implements OnInit {
       this.searchResults = [];
       return;
     }
-    if (this.pokemonDataService.pokemonList)
-      this.searchResults = this.pokemonDataService.pokemonList.filter(
-        (pokemon: Pokemon) =>
-          pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
-      );
+    this.pokemonDataService.pokemonList
+      .pipe(
+        tap((list) =>
+          list.filter((pokemon: Pokemon) =>
+            pokemon.name.toLowerCase().includes(searchInput.toLowerCase())
+          )
+        )
+      )
+      .subscribe();
 
     this.noResult = this.searchResults.length === 0;
   }
