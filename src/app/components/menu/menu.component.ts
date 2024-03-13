@@ -1,7 +1,7 @@
+import { NgStyle } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
-import { CommonModule, NgFor, NgStyle } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 
 @Component({
   selector: 'app-menu',

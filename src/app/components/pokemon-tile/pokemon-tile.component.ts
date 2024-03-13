@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule, NgFor, NgStyle } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Pokemon } from '@models/pokemon.model';
 

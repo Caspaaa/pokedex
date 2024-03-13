@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { SidePanelComponent } from './components/side-panel/side-panel.component';
 import { MenuComponent } from './components/menu/menu.component';
+import { SidePanelComponent } from './components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-root',

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from './local-storage.service';
 import { Pokemon, PokemonFull } from '@models/pokemon.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',

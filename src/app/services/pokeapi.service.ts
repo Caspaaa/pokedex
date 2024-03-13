@@ -1,29 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import {
-  Observable,
-  catchError,
-  map,
-  of,
-  switchMap,
-  tap,
-  throwError,
-} from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 
-import { LocalStorageService } from './local-storage.service';
 import { PokemonDataService } from './pokemon-data.service';
 
-import {
-  Pokemon,
-  PokemonFull,
-  PokemonLight,
-  Stat,
-} from '@models/pokemon.model';
 import { Router } from '@angular/router';
+import { Pokemon, PokemonFull, PokemonLight } from '@models/pokemon.model';
 
 import {
-  GET_POKEMON_FULL,
   GET_ALL_POKEMON_LIGHT,
+  GET_POKEMON_FULL,
 } from '../queries/pokeapi.queries';
 
 import { ToastrService } from 'ngx-toastr';

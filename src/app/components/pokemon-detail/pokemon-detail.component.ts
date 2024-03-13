@@ -1,13 +1,12 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterOutlet, RouterLink } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 
+import { PokemonFull } from '@models/pokemon.model';
 import { map } from 'rxjs';
-import { PokemonFull, PokemonLight } from '@models/pokemon.model';
-import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
-import { PokeapiService } from '../../services/pokeapi.service';
 import { CapturedPokemonsService } from '../../services/captured-pokemons.service';
-import { PokemonDataService } from '../../services/pokemon-data.service';
+import { PokeapiService } from '../../services/pokeapi.service';
+import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 
 @Component({
   selector: 'app-pokemon-detail',

@@ -1,5 +1,3 @@
-import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
 import { ApplicationConfig, inject } from '@angular/core';
 import {
   ApolloClientOptions,
@@ -7,6 +5,8 @@ import {
   InMemoryCache,
 } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
+import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
 
 const uri = 'https://beta.pokeapi.co/graphql/v1beta';
 export function apolloOptionsFactory(): ApolloClientOptions<any> {

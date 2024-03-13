@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
 import { Pokemon } from '@models/pokemon.model';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 
 @Component({

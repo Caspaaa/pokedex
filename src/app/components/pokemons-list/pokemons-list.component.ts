@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
-import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
-import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
 import { tap } from 'rxjs';
 import { PokeapiService } from '../../services/pokeapi.service';
+import { PokemonDataService } from '../../services/pokemon-data.service';
+import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
+import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
 
 @Component({
   selector: 'app-pokemons-list',

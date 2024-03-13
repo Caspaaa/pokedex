@@ -1,10 +1,10 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MyPokemonsComponent } from '../my-pokemons/my-pokemons.component';
-import { NgIf, NgFor } from '@angular/common';
-import { PokemonDataService } from '../../services/pokemon-data.service';
-import { Pokemon } from '@models/pokemon.model';
 import { RouterLink } from '@angular/router';
+import { Pokemon } from '@models/pokemon.model';
 import { tap } from 'rxjs';
+import { PokemonDataService } from '../../services/pokemon-data.service';
+import { MyPokemonsComponent } from '../my-pokemons/my-pokemons.component';
 
 @Component({
   selector: 'app-side-panel',

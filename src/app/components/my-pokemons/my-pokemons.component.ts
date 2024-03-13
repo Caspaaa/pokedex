@@ -1,8 +1,8 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
-import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 import { tap } from 'rxjs';
+import { PokemonDataService } from '../../services/pokemon-data.service';
 
 @Component({
   selector: 'app-my-pokemons',
