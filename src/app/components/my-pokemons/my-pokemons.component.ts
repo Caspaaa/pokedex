@@ -2,6 +2,7 @@ import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-my-pokemons',
@@ -16,10 +17,8 @@ export class MyPokemonsComponent {
   constructor(private pokemonDataService: PokemonDataService) {}
 
   ngOnInit() {
-    if (this.pokemonDataService.pokemonList) {
-      this.capturedPokemons = this.pokemonDataService.pokemonList.filter(
-        (pokemon) => pokemon.captured
-      );
-    }
+    this.pokemonDataService.pokemonList
+      .pipe(tap((list) => list.filter((pokemon) => pokemon.captured)))
+      .subscribe();
   }
 }

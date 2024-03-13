@@ -24,6 +24,7 @@ import { PokemonDataService } from '../../services/pokemon-data.service';
 })
 export class PokemonDetailComponent {
   pokemonFull: PokemonFull | null = null;
+  pokemonId: number | null = null;
   @ViewChild('buttonPrevious')
   buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
   @ViewChild('buttonNext') buttonNext: ElementRef<HTMLButtonElement> | null =
@@ -38,18 +39,16 @@ export class PokemonDetailComponent {
   ) {}
 
   ngOnInit() {
-    if (!this.pokemonDataService.pokemonList) {
-      this.pokeapiService.fetchAllPokemonLight().subscribe();
-    }
-
     const UriPokemonId = this.route.params.pipe(map((params) => params['id']));
 
     UriPokemonId.subscribe((id) => {
       this.loadPokemonFull(id);
+      this.pokemonId = id;
     });
   }
 
   loadPokemonFull(id: number) {
+    console.log('loadPokemonFull');
     this.pokeapiService
       .fetchPokemonFull(id)
       .subscribe((pokemon: PokemonFull) => {
@@ -60,9 +59,9 @@ export class PokemonDetailComponent {
   }
 
   togglePokemonCapture() {
-    if (this.pokemonFull) {
-      this.pokemonFull.captured = !this.pokemonFull?.captured;
-      this.capturePokemonsService.toggleCapturedStatus(this.pokemonFull.id);
+    if (this.pokemonId) {
+      console.log('togglePokemonCapture');
+      this.capturePokemonsService.toggleCapturedStatus(this.pokemonId);
     }
   }
 

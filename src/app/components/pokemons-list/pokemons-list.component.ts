@@ -6,6 +6,7 @@ import { PokeapiService } from '../../services/pokeapi.service';
 import { Pokemon } from '@models/pokemon.model';
 import { PokemonSearchComponent } from '../pokemon-input/pokemon-input.component';
 import { PokemonTileComponent } from '../pokemon-tile/pokemon-tile.component';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-pokemons-list',
@@ -37,31 +38,28 @@ export class PokemonsListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.pokeapiService.fetchAllPokemonLight().subscribe((response) => {
-    //   if (response) {
-    if (this.pokemonDataService.pokemonList)
-      this.list_length = this.pokemonDataService.pokemonList.length;
-    this.slicePokemonList();
-    //   }
-    // });
+    console.log('list component init');
+    this.pokemonDataService.pokemonList
+      .pipe(
+        tap((list) => {
+          this.list_length = list.length;
+          this.displayed_pokemons = this.slicePokemonList(list);
+        })
+      )
+      .subscribe();
   }
 
-  slicePokemonList() {
-    if (this.pokemonDataService.pokemonList) {
-      this.displayed_pokemons = this.pokemonDataService.pokemonList.slice(
-        this.offset,
-        this.offset + this.limit
-      );
-    }
+  slicePokemonList(list: Pokemon[]) {
+    return list.slice(this.offset, this.offset + this.limit);
   }
 
   onMorePokemons() {
     this.limit += this.limit;
-    this.slicePokemonList();
+    this.displayed_pokemons = this.slicePokemonList(this.displayed_pokemons);
   }
 
   onLessPokemons() {
     this.limit = Math.max(this.CHUNK, this.limit - this.CHUNK);
-    this.slicePokemonList();
+    this.displayed_pokemons = this.slicePokemonList(this.displayed_pokemons);
   }
 }
