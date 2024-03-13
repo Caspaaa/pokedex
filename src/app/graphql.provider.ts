@@ -20,7 +20,10 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
               `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
             )
           );
-        if (networkError) console.log(`[Network error]: ${networkError}`);
+        if (networkError)
+          console.log(
+            `[Network error]: ${JSON.stringify(networkError, null, 2)}`
+          );
       }),
       httpLink.create({ uri }),
     ]),

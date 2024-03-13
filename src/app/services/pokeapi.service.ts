@@ -19,11 +19,14 @@ import {
   PokemonLight,
   Stat,
 } from '@models/pokemon.model';
+import { Router } from '@angular/router';
 
 import {
   GET_POKEMON_FULL,
   GET_ALL_POKEMON_LIGHT,
 } from '../queries/pokeapi.queries';
+
+import { ToastrService } from 'ngx-toastr';
 
 export interface AllPokemonLightResponse {
   pokemon_v2_pokemon: Array<{
@@ -82,7 +85,9 @@ export interface PokemonFullQueryParams {
 export class PokeapiService {
   constructor(
     private apollo: Apollo,
-    private pokemonDataService: PokemonDataService
+    private pokemonDataService: PokemonDataService,
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.fetchAllPokemonLight().subscribe();
   }
@@ -122,6 +127,15 @@ export class PokeapiService {
               this.pokemonDataService.updateLocalStorage(list);
 
               return list;
+            }),
+            catchError((error) => {
+              this.toastr.error(
+                'The list of pokemon could not be loaded',
+                'Something went wrong'
+              );
+              this.router.navigate(['/error']);
+
+              return of(error);
             })
           );
       })
@@ -175,6 +189,15 @@ export class PokeapiService {
                 // TODO - remove pokemon raw graphql props still on object
                 this.pokemonDataService.storePokemonInCache(pokemon);
                 return pokemon;
+              }),
+              catchError((error) => {
+                console.log('error', error);
+                this.toastr.error(
+                  'This pokemon could not be found',
+                  'Something went wrong'
+                );
+                this.router.navigate(['/error']);
+                return of(error);
               })
             );
         }

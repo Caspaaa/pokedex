@@ -9,7 +9,7 @@ import { tap } from 'rxjs';
 @Component({
   selector: 'app-side-panel',
   standalone: true,
-  imports: [MyPokemonsComponent, NgFor, RouterLink],
+  imports: [MyPokemonsComponent, NgFor, NgIf, RouterLink],
   templateUrl: './side-panel.component.html',
   styleUrls: ['./side-panel.component.css'],
 })
