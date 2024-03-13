@@ -25,47 +25,46 @@ import {
   GET_ALL_POKEMON_LIGHT,
 } from '../queries/pokeapi.queries';
 
-export interface PokemonLightListResponse {
+export interface AllPokemonLightResponse {
   pokemon_v2_pokemon: Array<{
     id: number;
     name: string;
     pokemon_v2_pokemontypes: Array<{
-      pokemon_v2_type: Array<{
+      pokemon_v2_type: {
         name: string;
-      }>;
-    }>;
-  }>;
-}
-
-export interface PokemonListResponse {
-  pokemon_v2_pokemon: Array<{
-    id: number;
-    pokemon_v2_pokemontypes: Array<{
-      pokemon_v2_type: Array<{
-        name: string;
-      }>;
+      };
     }>;
   }>;
 }
 
 export interface PokemonFullResponse {
-  pokemon_v2_pokemon: {
+  pokemon_v2_pokemon: Array<{
     id: number;
     name: string;
     height: number;
     weight: number;
     pokemon_v2_pokemontypes: Array<{
-      pokemon_v2_type: Array<{
+      pokemon_v2_type: {
         name: string;
-      }>;
+      };
     }>;
     pokemon_v2_pokemonstats: Array<{
       base_stat: number;
-      pokemon_v2_stat: Array<{
+      pokemon_v2_stat: {
         name: string;
-      }>;
+      };
     }>;
-  };
+    pokemon_v2_pokemonmoves: Array<{
+      level: number;
+      pokemon_v2_move: {
+        name: string;
+        accuracy: number;
+        pp: number;
+        power: number;
+      };
+      version_group_id: number;
+    }>;
+  }>;
 }
 
 export interface PokemonLightQueryParams {
@@ -90,48 +89,47 @@ export class PokeapiService {
 
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
-  // TODO - Fix type
   fetchAllPokemonLight(): Observable<Pokemon[] | Pokemon> {
     console.log('fetchAllPokemonLight');
     return this.pokemonDataService.pokemonList.pipe(
       switchMap((list) => {
         console.log('pokemon list in cache');
         if (list.length > 0) return list;
-        else {
-          console.log('no cache, fetchAllPokemonLight');
-          return this.apollo
-            .watchQuery<PokemonLightListResponse, PokemonLightQueryParams>({
-              query: GET_ALL_POKEMON_LIGHT,
-              variables: {
-                offset: 0,
-                limit: 1500,
-              },
+
+        console.log('no cache, fetchAllPokemonLight');
+
+        const test = this.apollo
+          .watchQuery<AllPokemonLightResponse, PokemonLightQueryParams>({
+            query: GET_ALL_POKEMON_LIGHT,
+            variables: {
+              offset: 0,
+              limit: 1500,
+            },
+          })
+          .valueChanges.pipe(
+            map((response) => response.data.pokemon_v2_pokemon),
+            map((rawPokemonList) => {
+              const list = rawPokemonList.map((rawPokemon): PokemonLight => {
+                const types = rawPokemon.pokemon_v2_pokemontypes.map(
+                  (type) => type.pokemon_v2_type.name
+                );
+
+                return {
+                  ...rawPokemon,
+                  captured: Math.random() < 0.1,
+                  model_type: 'light',
+                  types,
+                };
+              });
+
+              this.pokemonDataService.pokemonList.next(list);
+              this.pokemonDataService.updateLocalStorage(list);
+
+              return list;
             })
-            .valueChanges.pipe(
-              map((response) => response.data.pokemon_v2_pokemon),
-              map((rawPokemonList) => {
-                // TODO - Set types
-                const list = rawPokemonList.map((rawPokemon): PokemonLight => {
-                  const typesResponse: any = rawPokemon.pokemon_v2_pokemontypes;
-                  const rawTypesList: any = typesResponse.map(
-                    (type: any) => type.pokemon_v2_type
-                  );
-                  const typesList: any = rawTypesList.map(
-                    (item: any) => item.name
-                  );
-                  return {
-                    ...rawPokemon,
-                    captured: Math.random() < 0.1,
-                    model_type: 'light',
-                    types: typesList,
-                  };
-                });
-                this.pokemonDataService.pokemonList.next(list);
-                this.pokemonDataService.updateLocalStorage(list);
-                return list;
-              })
-            );
-        }
+          );
+
+        return test;
       })
     );
   }
@@ -146,7 +144,7 @@ export class PokeapiService {
           (pokemon) => pokemon.id === Number(pokemonId)
         );
         if (cachedPokemon && cachedPokemon.model_type === 'full') {
-          return of(cachedPokemon as PokemonFull);
+          return of(cachedPokemon);
         } else {
           console.log('pokemon full is not in cache');
           return this.apollo
@@ -155,31 +153,28 @@ export class PokeapiService {
               variables: { id: pokemonId },
             })
             .valueChanges.pipe(
-              map((response) => {
-                // TODO - Set types
-                const pokemonResponse: any = response.data.pokemon_v2_pokemon;
-                const pokemonData: any = pokemonResponse[0];
-                const pokemonStats: any =
-                  pokemonData.pokemon_v2_pokemonstats.map((stat: any) => {
+              map((response) => response.data.pokemon_v2_pokemon[0]),
+              map((rawPokemon) => {
+                console.log('rawPokemonList', rawPokemon);
+                const pokemonStats = rawPokemon.pokemon_v2_pokemonstats.map(
+                  (stat) => {
                     return {
                       name: stat.pokemon_v2_stat.name,
                       value: stat.base_stat,
                     };
-                  });
-                // TODO - Set types
-                const rawPokemonMoves: any =
-                  pokemonData.pokemon_v2_pokemonmoves;
-                const pokemonMoves = rawPokemonMoves.map((move: any) => {
-                  return {
-                    name: move.pokemon_v2_move.name,
-                    level: move.level,
-                    accuracy: move.pokemon_v2_move.accuracy,
-                    pp: move.pokemon_v2_move.pp,
-                    power: move.pokemon_v2_move.power,
-                  };
-                });
-
-                // TODO - Fix this type
+                  }
+                );
+                const pokemonMoves = rawPokemon.pokemon_v2_pokemonmoves.map(
+                  (move) => {
+                    return {
+                      name: move.pokemon_v2_move.name,
+                      level: move.level,
+                      accuracy: move.pokemon_v2_move.accuracy,
+                      pp: move.pokemon_v2_move.pp,
+                      power: move.pokemon_v2_move.power,
+                    };
+                  }
+                );
                 const pokemon: any = {
                   ...cachedPokemon,
                   model_type: 'full',
@@ -188,7 +183,7 @@ export class PokeapiService {
                 };
                 // TODO - remove pokemon raw graphql props still on object
                 this.pokemonDataService.storePokemonInCache(pokemon);
-                return pokemon as PokemonFull;
+                return pokemon;
               })
             );
         }
