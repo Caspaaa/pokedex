@@ -1,9 +1,9 @@
-<div class="w-64 search-container">
+<div class="w-48 sm:w-64 search-container">
   <div class="relative mx-auto text-gray-600">
     <input
       [formControl]="searchControl"
       (keyup.enter)="goToFirstResult()"
-      class="bg-white h-12 px-5 pr-16 rounded-full text-md focus:outline-none"
+      class="bg-white h-12 px-5 pr-0 sm:pr-16 rounded-full text-md focus:outline-none"
       type="search"
       name="search"
       placeholder="Search Pokémon"
