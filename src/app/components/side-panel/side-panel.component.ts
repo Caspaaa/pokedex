@@ -5,6 +5,7 @@ import { PokemonDataService } from '../../services/pokemon-data.service';
 import { Pokemon } from '@models/pokemon.model';
 import { RouterLink } from '@angular/router';
 import { tap } from 'rxjs';
+import { PokeapiService } from '../../services/pokeapi.service';
 
 @Component({
   selector: 'app-side-panel',
@@ -21,10 +22,11 @@ export class SidePanelComponent {
   public capturedPokemons: Pokemon[] = [];
   result: any;
 
-  constructor(private pokemonDataService: PokemonDataService) {}
+  constructor(private pokemonApiService: PokeapiService) {}
 
   ngOnInit() {
-    this.pokemonDataService.pokemonList
+    this.pokemonApiService
+      .fetchAllPokemonLight()
       .pipe(
         tap((list) => {
           this.capturedPokemons = list.filter((pokemon) => pokemon.captured);

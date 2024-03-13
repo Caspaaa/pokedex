@@ -7,10 +7,21 @@ import {
   InMemoryCache,
 } from '@apollo/client/core';
 import { onError } from '@apollo/client/link/error';
+import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
+
+const cache = new InMemoryCache();
 
 const uri = 'https://beta.pokeapi.co/graphql/v1beta';
 export function apolloOptionsFactory(): ApolloClientOptions<any> {
   const httpLink = inject(HttpLink);
+
+  if (typeof window !== 'undefined') {
+    persistCacheSync({
+      cache,
+      storage: new LocalStorageWrapper(localStorage),
+    });
+  }
+
   return {
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -24,13 +35,13 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
       }),
       httpLink.create({ uri }),
     ]),
-    cache: new InMemoryCache(),
-    defaultOptions: {
-      watchQuery: {
-        fetchPolicy: 'network-only', // cache-first
-        // fetchPolicy: 'cache-first', // cache-first
-      },
-    },
+    cache: cache,
+    // defaultOptions: {
+    //   watchQuery: {
+    //     fetchPolicy: 'network-only', // cache-first
+    //     // fetchPolicy: 'cache-first', // cache-first
+    //   },
+    // },
   };
 }
 

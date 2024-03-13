@@ -33,7 +33,6 @@ export class PokemonDetailComponent {
 
   constructor(
     private pokeapiService: PokeapiService,
-    private pokemonDataService: PokemonDataService,
     private route: ActivatedRoute,
     private capturePokemonsService: CapturedPokemonsService
   ) {}

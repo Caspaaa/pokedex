@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { Pokemon } from '@models/pokemon.model';
 import { PokemonDataService } from '../../services/pokemon-data.service';
+import { PokeapiService } from '../../services/pokeapi.service';
 
 @Component({
   selector: 'app-pokemon-input',
@@ -19,10 +20,7 @@ export class PokemonSearchComponent implements OnInit {
   public showResults: boolean = false;
   public noResult = false;
 
-  constructor(
-    private pokemonDataService: PokemonDataService,
-    private router: Router
-  ) {}
+  constructor(private pokeApiService: PokeapiService, private router: Router) {}
 
   ngOnInit(): void {
     this.searchControl.valueChanges
@@ -41,7 +39,8 @@ export class PokemonSearchComponent implements OnInit {
       this.searchResults = [];
       return;
     }
-    this.pokemonDataService.pokemonList
+    this.pokeApiService
+      .fetchAllPokemonLight()
       .pipe(
         tap((list) => {
           this.searchResults = list.filter((pokemon: Pokemon) =>
