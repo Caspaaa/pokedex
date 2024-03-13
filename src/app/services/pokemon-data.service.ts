@@ -16,7 +16,6 @@ export class PokemonDataService {
 
   // Copy pokemon list from localStorage into a local variable
   loadPokemonListFromCache() {
-    console.log('loadPokemonListFromCache');
     const cachedList: string | null = this.localStorageService.getItem('list');
     const currentTime: number = new Date().getTime();
     if (cachedList) {

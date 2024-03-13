@@ -20,7 +20,6 @@ export class CapturedPokemonsService {
       this.pokemonDataService.pokemonList.next(currentList);
       this.pokemonDataService.updateLocalStorage(currentList);
     } else {
-      console.log('pokemon not in cache');
     }
   }
 }

@@ -1,11 +1,11 @@
 <div
   *ngIf="pokemonFull && pokemonFull.types"
-  class="px-4 h-screen pt-[96px]"
+  class="px-4 sm:px-8 md:px-12 xl:px-24 h-screen pt-[96px]"
   [ngClass]="'bg-gradient-' + pokemonFull.types[0]"
 >
   <div class="flex flex-wrap">
     <!-- Image section -->
-    <div class="w-full sm:w-1/2 lg:w-2/5 2xl:w-1/3 p-8 sm:p-16">
+    <div class="w-full sm:w-1/2 lg:w-2/5 2xl:w-1/3 py-8 2xl:py-16 pr-8">
       <div class="relative min-h-80">
         <div class="absolute invert opacity-10 z-10 pb-16 pl-24">
           <img
@@ -36,9 +36,7 @@
         {{ pokemonFull.name }}
       </div>
       <!-- Navigation buttons -->
-      <div
-        class="hidden sm:flex xl:hidden sm:pt-2 items-end justify-center opacity-70"
-      >
+      <div class="hidden sm:flex sm:pt-2 items-end justify-center opacity-70">
         <div
           class="h-12 w-10 flex justify-center items-center font-pocket text-3xl opacity-80 text-white"
         >
@@ -153,64 +151,25 @@
         </div>
         <!-- Moves -->
         <div
+          *ngIf="pokemonFull.moves.length > 0"
           class="bg-white bg-opacity-30 sm:bg-opacity-0 p-4 xl:p-0 rounded-3xl"
         >
           <p class="text-xl">Moves</p>
           <div class="flex flex-wrap">
             <div *ngFor="let move of pokemonFull.moves">
-              <button
-                class="flex hover:bg-blue-700 text-white font-bold py-2 p-3 rounded-lg m-1"
+              <div
+                class="flex text-white font-bold py-2 p-3 rounded-lg m-1"
                 [ngClass]="'bg-' + pokemonFull.types[0]"
               >
                 <span
                   class="flex justify-center items-center bg-gray-800 bg-opacity-20 rounded-full py-1 px-2 mr-2 text-xs"
                   >level {{ move.level }} </span
                 ><span>{{ move.name }}</span>
-              </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <!-- Navigation buttons -->
-  <div class="hidden xl:flex sm:pt-2 items-end justify-center opacity-70">
-    <div
-      class="h-12 w-8 px-3 flex justify-start items-center font-pocket text-3xl opacity-80 text-white"
-    >
-      <span *ngIf="pokemonFull.id > 1">{{ pokemonFull.id - 1 }}</span>
-    </div>
-    <button
-      #buttonPrevious
-      [routerLink]="['/pokemon', pokemonFull.id - 1]"
-      [disabled]="pokemonFull.id === 1"
-    >
-      <img
-        [src]="
-          pokemonFull.id > 1
-            ? 'assets/img/icons/key-left.png'
-            : 'assets/img/icons/left-icon.png'
-        "
-        alt="left-arrow"
-        class="h-12 mr-0.5"
-      />
-    </button>
-    <img
-      [src]="'assets/img/icons/keys-up-down.png'"
-      alt="up-down-keys"
-      class="h-[6.2rem]"
-    />
-    <button #buttonNext [routerLink]="['/pokemon', pokemonFull.id + 1]">
-      <img
-        [src]="'assets/img/icons/key-right.png'"
-        alt="right-arrow"
-        class="h-12 ml-0.5"
-      />
-    </button>
-    <div
-      class="h-12 w-10 flex justify-center items-center font-pocket text-3xl opacity-80 text-white"
-    >
-      {{ pokemonFull.id + 1 }}
     </div>
   </div>
 </div>

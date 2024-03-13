@@ -1,5 +1,5 @@
 <div
-  class="absolute w-full bg-transparent h-[96px] flex flex-wrap items-center justify-between px-4 py-6"
+  class="absolute w-full bg-transparent h-[96px] flex flex-wrap items-center justify-between px-4 sm:px-8 md:px-12 xl:px-24 py-6 z-40"
 >
   <div class="flex flex-wrap">
     <button
@@ -10,7 +10,7 @@
     </button>
     <app-pokemon-input></app-pokemon-input>
   </div>
-  <div (click)="toggleSidePanel()">
+  <div (click)="toggleSidePanel()" class="relative z-30">
     <div
       class="flex h-12 py-3 px-3 sm:px-4 mx-1 rounded-full cursor-pointer bg-gray-500 bg-opacity-30"
     >

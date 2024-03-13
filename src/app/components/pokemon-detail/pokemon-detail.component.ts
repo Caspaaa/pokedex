@@ -33,7 +33,6 @@ export class PokemonDetailComponent {
 
   constructor(
     private pokeapiService: PokeapiService,
-    private pokemonDataService: PokemonDataService,
     private route: ActivatedRoute,
     private capturePokemonsService: CapturedPokemonsService
   ) {}
@@ -48,7 +47,6 @@ export class PokemonDetailComponent {
   }
 
   loadPokemonFull(id: number) {
-    console.log('loadPokemonFull');
     this.pokeapiService
       .fetchPokemonFull(id)
       .subscribe((pokemon: PokemonFull) => {
@@ -60,7 +58,6 @@ export class PokemonDetailComponent {
 
   togglePokemonCapture() {
     if (this.pokemonId) {
-      console.log('togglePokemonCapture');
       this.capturePokemonsService.toggleCapturedStatus(this.pokemonId);
     }
   }

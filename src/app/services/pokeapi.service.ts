@@ -90,15 +90,11 @@ export class PokeapiService {
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
   fetchAllPokemonLight(): Observable<Pokemon[] | Pokemon> {
-    console.log('fetchAllPokemonLight');
     return this.pokemonDataService.pokemonList.pipe(
       switchMap((list) => {
-        console.log('pokemon list in cache');
         if (list.length > 0) return list;
 
-        console.log('no cache, fetchAllPokemonLight');
-
-        const test = this.apollo
+        return this.apollo
           .watchQuery<AllPokemonLightResponse, PokemonLightQueryParams>({
             query: GET_ALL_POKEMON_LIGHT,
             variables: {
@@ -128,15 +124,12 @@ export class PokeapiService {
               return list;
             })
           );
-
-        return test;
       })
     );
   }
 
   // Fetch a Pokemon with extensive details and add the captured property
   fetchPokemonFull(pokemonId: number): Observable<PokemonFull> {
-    console.log('fetchPokemonFull');
     // Return it from cache if available with details
     return this.pokemonDataService.pokemonList.pipe(
       switchMap((list) => {
@@ -146,7 +139,6 @@ export class PokeapiService {
         if (cachedPokemon && cachedPokemon.model_type === 'full') {
           return of(cachedPokemon);
         } else {
-          console.log('pokemon full is not in cache');
           return this.apollo
             .watchQuery<PokemonFullResponse, PokemonFullQueryParams>({
               query: GET_POKEMON_FULL,
@@ -155,7 +147,6 @@ export class PokeapiService {
             .valueChanges.pipe(
               map((response) => response.data.pokemon_v2_pokemon[0]),
               map((rawPokemon) => {
-                console.log('rawPokemonList', rawPokemon);
                 const pokemonStats = rawPokemon.pokemon_v2_pokemonstats.map(
                   (stat) => {
                     return {

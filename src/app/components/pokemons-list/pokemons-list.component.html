@@ -1,5 +1,5 @@
 <div
-  class="flex flex-col items-center justify-center px-4 pt-[96px] md:h-screen overflow-y-scroll"
+  class="flex flex-col items-center justify-center px-4 pt-[96px] md:h-screen overflow-y-scroll relative"
   [ngStyle]="{
     background:
       'linear-gradient(45deg, rgb(33, 212, 182, 0.5) 0%, rgb(134, 213, 134, 0.5) 100%)'
@@ -12,7 +12,38 @@
       class="flex"
     ></app-pokemon-tile>
   </div>
-  <button *ngIf="limit > 10" (click)="onLessPokemons()">Less</button>
-  <button *ngIf="limit < list_length" (click)="onMorePokemons()">More</button>
-  {{ limit }}-{{ offset }}
+  <!-- <button *ngIf="limit > 10" (click)="onLessPokemons()">Less</button>
+  <button *ngIf="limit < list_length" (click)="onMorePokemons()">More</button> -->
+  <!-- offset{{ this.offset }} limit{{ this.limit }} -->
+
+  <button
+    #buttonPrevious
+    (click)="onLessPokemons()"
+    [disabled]="limit > 10"
+    class="hidden xl:flex xl:absolute lg:left-12"
+  >
+    <img src="assets/img/icons/key-left.png" alt="left-arrow" class="h-12" />
+  </button>
+
+  <button
+    #buttonNext
+    (click)="onMorePokemons()"
+    class="h-12 hidden xl:flex xl:absolute lg:right-12"
+  >
+    <img src="assets/img/icons/key-right.png" alt="right-arrow" class="h-12" />
+  </button>
+
+  <div class="flex xl:hidden my-4">
+    <button #buttonPrevious (click)="onLessPokemons()" class="">
+      <img src="assets/img/icons/key-left.png" alt="left-arrow" class="h-12" />
+    </button>
+
+    <button #buttonNext (click)="onMorePokemons()" class="">
+      <img
+        src="assets/img/icons/key-right.png"
+        alt="right-arrow"
+        class="h-12"
+      />
+    </button>
+  </div>
 </div>
