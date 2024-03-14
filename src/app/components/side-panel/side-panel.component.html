@@ -1,4 +1,5 @@
 <div
+  (appClickOutside)="close()"
   class="fixed top-0 right-[-100%] sm:right-[-50%] lg:right-[-33.34%] 2xl:right-[-25%] w-full sm:w-1/2 lg:w-1/3 2xl:w-1/4 h-full bg-white shadow-[2px_0px_5px_rgba(0,0,0,0.5)] transform translate-x-0 transition-transform duration-200 ease-out z-50 overflow-y-scroll rounded-l-[50px] pl-2.5"
   [class.open]="isOpen"
   [class.translate-x-[-100%]]="isOpen"

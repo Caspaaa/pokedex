@@ -4,12 +4,18 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Pokemon } from '@models/pokemon.model';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { PokemonDataService } from '../../services/pokemon-data.service';
 
 @Component({
   selector: 'app-pokemon-input',
   templateUrl: './pokemon-input.component.html',
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    ClickOutsideDirective,
+  ],
   standalone: true,
 })
 export class PokemonSearchComponent implements OnInit {
@@ -67,5 +73,9 @@ export class PokemonSearchComponent implements OnInit {
       this.router.navigate(['/pokemon', firstResultId]);
       this.hideResults();
     }
+  }
+
+  onOutsideImgClick() {
+    this.hideResults();
   }
 }
