@@ -1,8 +1,11 @@
 # Pokedex
 
 This is a web-based Pokedex application built with Angular 17 and GraphQL.
+
 It consumes the [pokeapi](https://pokeapi.co) API.
+
 User is able to navigate and search through all Pokemons and view their basic statistics.
+User is able to capture and release Pokemons. Random Pokemons are put as "captured" on the first load and stay in the cache for a week to simulate a user account.
 
 ## Demo
 
