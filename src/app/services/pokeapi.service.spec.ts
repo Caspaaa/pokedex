@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Router } from '@angular/router';
-import { Pokemon } from '@models/pokemon.model';
+import { Router, Routes, provideRouter } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import { IndividualConfig, ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
+import { ErrorComponent } from '../components/error/error.component';
 import { PokeapiService } from './pokeapi.service';
 import { PokemonDataService } from './pokemon-data.service';
 
-class FakePokemonDataService {
+class FakePokemonDataServiceWithCache {
   public pokemonList = of([
     {
       id: 1,
@@ -19,6 +19,29 @@ class FakePokemonDataService {
     },
   ]);
 }
+
+class FakePokemonDataServiceWithEmptyCache {
+  public pokemonList = of([]);
+}
+
+const fakeApollo = {
+  watchQuery: jasmine.createSpy('watchQuery').and.returnValue({
+    valueChanges: of({
+      data: {
+        pokemon_v2_pokemon: [
+          {
+            id: 1,
+            name: 'Bulbasaur',
+            model_type: 'light',
+            types: ['grass', 'poison'],
+          },
+        ],
+      },
+    }),
+  }),
+};
+
+// const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
 const toastrService = {
   success: (
@@ -33,37 +56,76 @@ const toastrService = {
   ) => {},
 };
 
+const appRoutes: Routes = [{ path: 'error', component: ErrorComponent }];
+
 describe('PokeapiService', () => {
   let service: PokeapiService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: PokemonDataService, useValue: new FakePokemonDataService() },
-        Apollo,
-        Router,
-        { provide: ToastrService, useValue: toastrService },
-      ],
+  describe('fetchAllPokemonLight when there is an array of Pokemon in the cache', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          Apollo,
+          { provide: ToastrService, useValue: toastrService },
+          {
+            provide: PokemonDataService,
+            useClass: FakePokemonDataServiceWithCache,
+          },
+          Router,
+        ],
+      });
+
+      service = TestBed.inject(PokeapiService);
     });
-    service = TestBed.inject(PokeapiService);
+
+    it('should return an array of Pokemon', (done: DoneFn) => {
+      service.fetchAllPokemonLight().subscribe((pokemonList) => {
+        expect(pokemonList).toEqual([
+          {
+            id: 1,
+            name: 'Bulbasaur',
+            model_type: 'light',
+            types: ['grass', 'poison'],
+            captured: false,
+          },
+        ]);
+        done();
+      });
+    });
   });
 
-  // it('should be created', () => {
-  //   expect(service).toBeTruthy();
-  // });
+  describe('fetchAllPokemonLight when cache is empty', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: Apollo, useValue: fakeApollo },
+          { provide: ToastrService, useValue: toastrService },
+          {
+            provide: PokemonDataService,
+            useClass: FakePokemonDataServiceWithEmptyCache,
+          },
+          Router,
+          provideRouter(appRoutes),
+        ],
+      });
+      service = TestBed.inject(PokeapiService);
+    });
 
-  it('fetchAllPokemonLight should return an array of Pokemon when there is an array of Pokemon in the cache', (done: DoneFn) => {
-    service.fetchAllPokemonLight().subscribe((pokemonList: Pokemon[]) => {
-      expect(pokemonList).toEqual([
-        {
-          id: 1,
-          name: 'Bulbasaur',
-          model_type: 'light',
-          types: ['grass', 'poison'],
-          captured: false,
-        },
-      ]);
-      done();
+    it('should fetch Pokemon from the API', (done: DoneFn) => {
+      service.fetchAllPokemonLight().subscribe((pokemonList) => {
+        console.log('pokemonList', pokemonList);
+        expect(pokemonList).toEqual([
+          {
+            id: 2,
+            name: 'Ivysaur',
+            model_type: 'light',
+            types: ['grass', 'poison'],
+            captured: false,
+          },
+        ]);
+
+        done();
+      });
     });
   });
 });
