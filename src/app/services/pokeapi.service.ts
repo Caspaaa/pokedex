@@ -74,16 +74,14 @@ export class PokeapiService {
     private pokemonDataService: PokemonDataService,
     private toastr: ToastrService,
     private router: Router
-  ) {
-    this.fetchAllPokemonLight().subscribe();
-  }
+  ) {}
 
   // Returns all pokemon names from cache
   // Or fetch them from API and assign them a captured value before storing the list to cache
-  fetchAllPokemonLight(): Observable<Pokemon[] | Pokemon> {
+  fetchAllPokemonLight(): Observable<Pokemon[]> {
     return this.pokemonDataService.pokemonList.pipe(
       switchMap((list) => {
-        if (list.length > 0) return list;
+        if (list.length > 0) return of(list);
 
         return this.apollo
           .watchQuery<AllPokemonLightResponse, PokemonLightQueryParams>({
