@@ -1,5 +1,11 @@
 import { CommonModule, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Pokemon } from '@models/pokemon.model';
 import { tap } from 'rxjs';
@@ -32,6 +38,10 @@ export class PokemonsListComponent implements OnInit {
   displayed_pokemons: Pokemon[] = [];
   previousPage: string | null = null;
   nextPage: string | null = null;
+  @ViewChild('buttonPrevious')
+  buttonPrevious: ElementRef<HTMLButtonElement> | null = null;
+  @ViewChild('buttonNext')
+  buttonNext: ElementRef<HTMLButtonElement> | null = null;
 
   constructor(
     private pokemonDataService: PokemonDataService,
@@ -64,5 +74,15 @@ export class PokemonsListComponent implements OnInit {
     this.limit = this.offset;
     this.offset = Math.max(0, this.offset - this.CHUNK);
     this.displayed_pokemons = this.slicePokemonList(this.list);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.buttonPrevious)
+      if (event.key === 'ArrowLeft') {
+        if (this.buttonPrevious) this.buttonPrevious.nativeElement.click();
+      } else if (event.key === 'ArrowRight') {
+        if (this.buttonNext) this.buttonNext.nativeElement.click();
+      }
   }
 }
