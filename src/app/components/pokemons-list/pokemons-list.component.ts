@@ -61,8 +61,8 @@ export class PokemonsListComponent implements OnInit {
   }
 
   onLessPokemons() {
-    this.offset = this.limit;
-    this.limit = Math.max(this.CHUNK, this.limit - this.CHUNK);
+    this.limit = this.offset;
+    this.offset = Math.max(0, this.offset - this.CHUNK);
     this.displayed_pokemons = this.slicePokemonList(this.list);
   }
 }

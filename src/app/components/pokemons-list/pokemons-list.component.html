@@ -12,15 +12,15 @@
       class="flex"
     ></app-pokemon-tile>
   </div>
-  <!-- <button *ngIf="limit > 10" (click)="onLessPokemons()">Less</button>
-  <button *ngIf="limit < list_length" (click)="onMorePokemons()">More</button> -->
-  <!-- offset{{ this.offset }} limit{{ this.limit }} -->
 
+  <!-- Desktop navigation -->
   <button
     #buttonPrevious
     (click)="onLessPokemons()"
-    [disabled]="limit > 10"
-    class="hidden xl:flex xl:absolute lg:left-12"
+    class="hidden xl:flex xl:absolute lg:left-12 {{
+      offset === 0 ? 'opacity-50' : ''
+    }}"
+    [disabled]="offset === 0"
   >
     <img src="assets/img/icons/key-left.png" alt="left-arrow" class="h-12" />
   </button>
@@ -33,8 +33,14 @@
     <img src="assets/img/icons/key-right.png" alt="right-arrow" class="h-12" />
   </button>
 
+  <!-- Mobile navigation -->
   <div class="flex xl:hidden my-4">
-    <button #buttonPrevious (click)="onLessPokemons()" class="">
+    <button
+      #buttonPrevious
+      (click)="onLessPokemons()"
+      class="{{ offset === 0 ? 'opacity-50' : '' }}"
+      [disabled]="offset === 0"
+    >
       <img src="assets/img/icons/key-left.png" alt="left-arrow" class="h-12" />
     </button>
 
