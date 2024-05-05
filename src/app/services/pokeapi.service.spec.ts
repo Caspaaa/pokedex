@@ -59,7 +59,8 @@ const toastrService = {
 const appRoutes: Routes = [{ path: 'error', component: ErrorComponent }];
 
 describe('PokeapiService', () => {
-  let service: PokeapiService;
+  let service: PokeapiService; // service that fetches from the api
+  let service2: PokemonDataService; // service that loads from cache
 
   describe('fetchAllPokemonLight when there is an array of Pokemon in the cache', () => {
     beforeEach(() => {
@@ -108,7 +109,7 @@ describe('PokeapiService', () => {
           provideRouter(appRoutes),
         ],
       });
-      service = TestBed.inject(PokeapiService);
+      service2 = TestBed.inject(PokemonDataService);
     });
 
     it('should fetch Pokemon from the API', (done: DoneFn) => {
@@ -116,8 +117,8 @@ describe('PokeapiService', () => {
         console.log('pokemonList', pokemonList);
         expect(pokemonList).toEqual([
           {
-            id: 2,
-            name: 'Ivysaur',
+            id: 1,
+            name: 'Bulbasaur',
             model_type: 'light',
             types: ['grass', 'poison'],
             captured: false,

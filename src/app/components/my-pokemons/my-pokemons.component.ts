@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Pokemon } from '@models/pokemon.model';
 import { tap } from 'rxjs';
 import { PokemonDataService } from '../../services/pokemon-data.service';
@@ -12,9 +12,10 @@ import { PokemonDataService } from '../../services/pokemon-data.service';
   styleUrl: './my-pokemons.component.css',
 })
 export class MyPokemonsComponent {
+  private pokemonDataService = inject(PokemonDataService);
   public capturedPokemons: Pokemon[] = [];
 
-  constructor(private pokemonDataService: PokemonDataService) {}
+  constructor() {}
 
   ngOnInit() {
     this.pokemonDataService.pokemonList
